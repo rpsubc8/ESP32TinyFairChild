@@ -16,5 +16,5 @@ He realizado varias modificaciones:
  <li>Soporte para modo 64 colores.</li>   
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
- <li>No se requiere la libreria de bitluni. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
+ <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
 </ul> 
