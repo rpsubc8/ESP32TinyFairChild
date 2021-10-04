@@ -1,9 +1,9 @@
 #include "gbConfig.h"
+#include "gbGlobals.h"
 #include "hardware.h"
 #include "fairchild.h"
 #include "osd.h"
 //#include "dataFlash/gbcom.h"
-#include "gbGlobals.h"
 #include "hardware.h"
 #ifdef use_lib_audio_tone32
  #include "Tone32.h"
@@ -53,25 +53,25 @@ unsigned char gb_show_osd_main_menu=0;
 
 
 
-#define max_gb_osd_screen 1
-const char * gb_osd_screen[max_gb_osd_screen]={
- "Pixels Left"//,
- //"Pixels Top",
- //"Color 8",
- //"Mono Blue 8",
- //"Mono Green 8",
- //"Mono Red 8",
- //"Mono Grey 8"
-};
+//#define max_gb_osd_screen 1
+//const char * gb_osd_screen[max_gb_osd_screen]={
+// "Pixels Left"//,
+// //"Pixels Top",
+// //"Color 8",
+// //"Mono Blue 8",
+// //"Mono Green 8",
+// //"Mono Red 8",
+// //"Mono Grey 8"
+//};
 
-#define max_gb_osd_screen_values 5
-const char * gb_osd_screen_values[max_gb_osd_screen_values]={
- "0",
- "2",
- "4", 
- "8", 
- "16"
-};
+//#define max_gb_osd_screen_values 5
+//const char * gb_osd_screen_values[max_gb_osd_screen_values]={
+// "0",
+// "2",
+// "4", 
+// "8", 
+// "16"
+//};
 
 
 #define max_gb_main_menu 7
@@ -93,8 +93,9 @@ const char * gb_main_menu[max_gb_main_menu]={
 //};
 
 
-#define max_gb_delay_cpu_menu 9
+#define max_gb_delay_cpu_menu 10
 const char * gb_delay_cpu_menu[max_gb_delay_cpu_menu]={
+ "Auto",
  "0",
  "1",
  "2",
@@ -107,29 +108,29 @@ const char * gb_delay_cpu_menu[max_gb_delay_cpu_menu]={
 };
 
 
-#define max_gb_speed_sound_menu 7
-const char * gb_speed_sound_menu[max_gb_speed_sound_menu]={
- "0",
- "1",
- "2",
- "4",
- "8",
- "16",
- "32"
-};
+//#define max_gb_speed_sound_menu 7
+//const char * gb_speed_sound_menu[max_gb_speed_sound_menu]={
+// "0",
+// "1",
+// "2",
+// "4",
+// "8",
+// "16",
+// "32"
+//};
 
-#define max_gb_value_binary_menu 2
-const char * gb_value_binary_menu[max_gb_value_binary_menu]={
- "0",
- "1"
-};
+//#define max_gb_value_binary_menu 2
+//const char * gb_value_binary_menu[max_gb_value_binary_menu]={
+// "0",
+// "1"
+//};
 
 
-#define max_gb_speed_videoaudio_options_menu 2
-const char * gb_speed_videoaudio_options_menu[max_gb_speed_videoaudio_options_menu]={
- "Video poll",
- "Keyboard poll"
-};
+//#define max_gb_speed_videoaudio_options_menu 2
+//const char * gb_speed_videoaudio_options_menu[max_gb_speed_videoaudio_options_menu]={
+// "Video poll",
+// "Keyboard poll"
+//};
 
 #define max_gb_speed_video_poll_menu 4
 const char * gb_speed_video_poll_menu[max_gb_speed_video_poll_menu]={
@@ -159,11 +160,11 @@ const char * gb_speed_keyboard_poll_menu[max_gb_speed_keyboard_poll_menu]={
 //};
 
 
-#define max_gb_osd_mouse_menu 2
-const char * gb_osd_mouse_menu[max_gb_osd_mouse_menu]={
- "right handed",
- "left handed"
-};
+//#define max_gb_osd_mouse_menu 2
+//const char * gb_osd_mouse_menu[max_gb_osd_mouse_menu]={
+// "right handed",
+// "left handed"
+//};
 
 #define max_gb_reset_menu 2
 const char * gb_reset_menu[max_gb_reset_menu]={
@@ -396,12 +397,20 @@ void ShowTinySpeedMenu()
  if (aSelNum == 255)
   return;
  if (aSelNum==0)
- {
-  gb_delay_tick_cpu_micros=0;
+ {//Auto delay
+  gb_auto_delay_cpu=1;
  }
  else
  {
-  gb_delay_tick_cpu_micros = (1<<(aSelNum-1));
+  gb_auto_delay_cpu=0;
+  if (aSelNum==1)
+  {
+   gb_delay_tick_cpu_micros=0;
+  }
+  else
+  {
+   gb_delay_tick_cpu_micros = (1<<(aSelNum-2));
+  }
  }
 }
 
@@ -435,12 +444,12 @@ void ShowTinyVGAPollMenu()
 
 
 //Ajustar pantalla
-void ShowTinyScreenAdjustMenu()
-{
- unsigned char aSelNum, auxCol; 
- aSelNum= ShowTinyMenu("Screen Adjust",gb_osd_screen,max_gb_osd_screen);
- auxCol= ShowTinyMenu("Pixels",gb_osd_screen_values,max_gb_osd_screen_values);
- auxCol = auxCol<<1; //x2
+//void ShowTinyScreenAdjustMenu()
+//{
+// unsigned char aSelNum, auxCol; 
+// aSelNum= ShowTinyMenu("Screen Adjust",gb_osd_screen,max_gb_osd_screen);
+// auxCol= ShowTinyMenu("Pixels",gb_osd_screen_values,max_gb_osd_screen_values);
+// auxCol = auxCol<<1; //x2
  //gb_screen_xOffset = auxCol; 
  /*switch (aSelNum)
  {
@@ -503,10 +512,10 @@ void ShowTinyScreenAdjustMenu()
   default: break;
  }
  */
-}
+//}
 
-void ShowTinyCOMMenu()
-{
+//void ShowTinyCOMMenu()
+//{
 // unsigned char aSelNum;     
 // aSelNum = ShowTinyMenu("COM",gb_list_com_title,max_list_com);
 //
@@ -514,22 +523,22 @@ void ShowTinyCOMMenu()
 // gb_force_load_com= 1;
 // gb_id_cur_com= aSelNum;
 // //running= 0;
-}
+//}
 
-void ShowTinyMouseMenu()
-{
- #ifdef use_lib_amx_mouse    
-  unsigned char aSelNum;
-  aSelNum = ShowTinyMenu("Mouse Buttons",gb_osd_mouse_menu,max_gb_osd_mouse_menu); 
-  switch (aSelNum)
-  {
-   case 0: gb_force_left_handed= 0; break; //diestro
-   case 1: gb_force_left_handed= 1; break; //zurdo
-   default: break;
-  }
- #endif
- vTaskDelay(2);
-}
+//void ShowTinyMouseMenu()
+//{
+// #ifdef use_lib_amx_mouse    
+//  unsigned char aSelNum;
+//  aSelNum = ShowTinyMenu("Mouse Buttons",gb_osd_mouse_menu,max_gb_osd_mouse_menu); 
+//  switch (aSelNum)
+//  {
+//   case 0: gb_force_left_handed= 0; break; //diestro
+//   case 1: gb_force_left_handed= 1; break; //zurdo
+//   default: break;
+//  }
+// #endif
+// vTaskDelay(2);
+//}
 
 
 //*******************************************

@@ -1,20 +1,20 @@
-/*
-	This file is part of FreeChaF.
+//	This file is part of FreeChaF.
+//
+//	FreeChaF is free software: you can redistribute it and/or modify
+//	it under the terms of the GNU General Public License as published by
+//	the Free Software Foundation, either version 3 of the License, or
+//	(at your option) any later version.
+//
+//	FreeChaF is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
-	FreeChaF is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	FreeChaF is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
-*/
-
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include "Arduino.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,14 +36,12 @@ void unsupported_hle_function(void)
 {
 	//Serial.printf(stderr, "Unsupported HLE function: 0x%x\n", PC0);
 	Serial.printf("Unsupported HLE function: 0x%x\n", PC0);
-/*
-	char formatted[1024];
-	struct retro_message msg;
-	msg.msg    = formatted;
-	msg.frames = 600;
-	Environ(RETRO_ENVIRONMENT_SET_MESSAGE, &msg);
-	Environ(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
-*/
+//	char formatted[1024];
+//	struct retro_message msg;
+//	msg.msg    = formatted;
+//	msg.frames = 600;
+//	Environ(RETRO_ENVIRONMENT_SET_MESSAGE, &msg);
+//	Environ(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 }
 
 static void hle_clear_row(int row)

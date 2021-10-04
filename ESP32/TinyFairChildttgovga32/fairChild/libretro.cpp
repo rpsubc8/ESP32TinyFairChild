@@ -14,6 +14,8 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include <Arduino.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,8 +38,6 @@
 #include "f2102.h"
 #include "channelf_hle.h"
 
-#include "gbConfig.h"
-#include "gbGlobals.h"
 #include "dataFlash/bios/gbRoms131253.h"
 #include "dataFlash/bios/gbRomsl90025.h"
 #include "dataFlash/bios/gbRoms131254.h"

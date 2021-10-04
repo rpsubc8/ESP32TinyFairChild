@@ -13,10 +13,10 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
-#include <string.h>
-#include "memory.h"
 #include "gbConfig.h"
 #include "gbGlobals.h"
+#include <string.h>
+#include "memory.h"
 #ifdef use_lib_minimal_ram
  #include "gbRoms131253.h"
  #include "gbRomsl90025.h"

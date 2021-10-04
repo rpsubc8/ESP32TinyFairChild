@@ -13,14 +13,14 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include <Arduino.h>
 #include "audio.h"
 #include <stdio.h>
 #include <string.h>
 
 //JJ #include "sintable.h"
-#include "gbConfig.h"
-#include "gbGlobals.h"
 #include "hardware.h"
 #ifdef use_lib_audio_tone32
  #include "Tone32.h"

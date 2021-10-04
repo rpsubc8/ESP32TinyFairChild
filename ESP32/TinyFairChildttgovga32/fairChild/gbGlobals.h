@@ -20,6 +20,29 @@
  #define R_SIZE 64
  extern unsigned char R[R_SIZE]; // 64 byte Scratchpad 
 
+
+ //BEGIN memory_h
+ extern unsigned char A; // Accumulator
+ extern unsigned short PC0; // Program Counter
+ extern unsigned short PC1; // Program Counter alternate
+ extern unsigned short DC0; // Data Counter
+ extern unsigned short DC1; // Data Counter alternate
+ extern unsigned char ISAR; // Indirect Scratchpad Address Register (6-bit)
+ extern unsigned char W; // Status Register (flags)
+ //END memory_h
+
+ //BEGIN video_h
+ extern unsigned char VIDEO_Buffer_raw[VIDEO_SIZE];
+ extern unsigned char ARM;
+ extern unsigned char X;
+ extern unsigned char Y;
+ extern unsigned char Color;
+ //END video_h
+
+ //BEGIN channelf_h
+ extern int CPU_Ticks_Debt;
+ //END channelf_h
+
  //BEGIN f2102
  extern unsigned short f2102_state;
  extern unsigned char f2102_memory[1024];
@@ -27,7 +50,15 @@
  extern unsigned char f2102_rw;
  //END f2102
  
+ //BEGIN controller_h
+ extern unsigned char ControllerEnabled;
+ extern unsigned char ControllerSwapped;
+ //END controller_h
  
+ //BEGIN ports_h
+ extern unsigned char Ports[64];
+ //END ports_h
+
  //extern SDL_Surface *screen;
  
  extern unsigned char tone;
@@ -57,6 +88,7 @@
  extern unsigned int **gb_buffer_vga32; //Puntero video 32 bits
 
  extern unsigned char gb_delay_tick_cpu_micros;
+ extern unsigned char gb_auto_delay_cpu;
 
  //fast bitluni
  extern unsigned char gb_sync_bits;

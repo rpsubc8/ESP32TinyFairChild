@@ -60,7 +60,7 @@ unsigned char VIDEO_Buffer_raw[VIDEO_SIZE]; // 128x64
 //	  vRGB(0xA6, 0xFF, 0x91),
 //	  vRGB(0xD0, 0xCE, 0xFF)
 //  };
-static const unsigned int palette[16] = {0,1,1,1, 7,2,4,3, 6,2,4,3, 5,2,4,3}; // bk wh wh wh, bl B G R, gr B G R, gy B G R...
+static const unsigned char palette[16] = {0,1,1,1, 7,2,4,3, 6,2,4,3, 5,2,4,3}; // bk wh wh wh, bl B G R, gr B G R, gy B G R...
 
 unsigned char ARM = 0;
 unsigned char X = 0;
@@ -69,23 +69,23 @@ unsigned char Color = 2;
 
 
 //void jj_fast_putpixel_no_clip(SDL_Surface *auxScreen, int x,int y,unsigned char c)
-inline static void jj_fast_putpixel_no_clip(int x,int y,unsigned char c)
-{
- x= (x<<1)+20;
- y= (y<<1)+10;
- //if ((x<0)||(x>639)||(y<0)||(y>399))
- //if ((x<0)||(x>319)||(y<0)||(y>199))
- // return; 
-// vga.dotFast(x,y,gb_color_vga[c]);
-// vga.dotFast(x+1,y,gb_color_vga[c]);
-// vga.dotFast(x,y+1,gb_color_vga[c]);
-// vga.dotFast(x+1,y+1,gb_color_vga[c]);
- 
- gb_buffer_vga[y][x^2]= gb_color_vga[c];
- gb_buffer_vga[y][(x+1)^2]= gb_color_vga[c];
- gb_buffer_vga[y+1][x^2]= gb_color_vga[c];
- gb_buffer_vga[y+1][(x+1)^2]= gb_color_vga[c];
-}
+//inline static void jj_fast_putpixel_no_clip(int x,int y,unsigned char c)
+//{
+// x= (x<<1)+20;
+// y= (y<<1)+10;
+// //if ((x<0)||(x>639)||(y<0)||(y>399))
+// //if ((x<0)||(x>319)||(y<0)||(y>199))
+// // return; 
+//// vga.dotFast(x,y,gb_color_vga[c]);
+//// vga.dotFast(x+1,y,gb_color_vga[c]);
+//// vga.dotFast(x,y+1,gb_color_vga[c]);
+//// vga.dotFast(x+1,y+1,gb_color_vga[c]);
+// 
+// gb_buffer_vga[y][x^2]= gb_color_vga[c];
+// gb_buffer_vga[y][(x+1)^2]= gb_color_vga[c];
+// gb_buffer_vga[y+1][x^2]= gb_color_vga[c];
+// gb_buffer_vga[y+1][(x+1)^2]= gb_color_vga[c];
+//}
 
 //void jj_fast_putpixel(SDL_Surface *auxScreen, int x,int y,unsigned char c)
 void jj_fast_putpixel(int x,int y,unsigned char c)

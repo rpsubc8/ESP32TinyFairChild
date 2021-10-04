@@ -2,6 +2,7 @@
  #define _FAIRCHILD_H
 
  #include "gbConfig.h"
+ #include "gbGlobals.h"
  #include "hardware.h"
  #ifndef use_lib_bitluni_fast 
   #include "MartianVGA.h"

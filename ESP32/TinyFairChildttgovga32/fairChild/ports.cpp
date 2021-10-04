@@ -13,6 +13,8 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include "ports.h"
 #include "f2102.h"
 #include "audio.h"

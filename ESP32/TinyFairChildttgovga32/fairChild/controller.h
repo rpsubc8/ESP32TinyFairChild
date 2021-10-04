@@ -38,7 +38,7 @@ int CONTROLLER_swapped(void);
 //JJ void setButton(int control, int button, int pressed);
 void setButton(unsigned char control, unsigned char button, unsigned char pressed);
 
-extern unsigned char ControllerEnabled;
-extern unsigned char ControllerSwapped;
+//extern unsigned char ControllerEnabled;
+//extern unsigned char ControllerSwapped;
 
 #endif

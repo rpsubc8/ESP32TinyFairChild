@@ -1,3 +1,8 @@
+#ifndef _CHANNELF_H
+ #define _CHANNELF_H
+
+ #include "gbConfig.h"
+ #include "gbGlobals.h"
 //	This file is part of FreeChaF.
 //
 //	FreeChaF is free software: you can redistribute it and/or modify
@@ -13,9 +18,9 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
-extern int CPU_Ticks_Debt;
+//extern int CPU_Ticks_Debt;
 
-int CHANNELF_loadROM(const char* path, int address);
+//int CHANNELF_loadROM(const char* path, int address);
 
 int CHANNELF_loadROM_mem(const unsigned char* data, int sz, int address);
 
@@ -26,3 +31,5 @@ void CHANNELF_init(void);
 void CHANNELF_reset(void);
 
 #define TICKS_PER_FRAME 14914
+
+#endif

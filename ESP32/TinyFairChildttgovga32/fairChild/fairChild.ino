@@ -13,9 +13,10 @@
 // Keyboard 2
 //  a,d,w,s   c,v
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include "PS2Kbd.h"
 #include <Arduino.h>
-#include "gbConfig.h"
 #ifdef use_lib_audio_tone32
  #include "Tone32.h"
 #else 
@@ -32,7 +33,6 @@
 #include "hardware.h"
 #include "driver/timer.h"
 #include "soc/timer_group_struct.h"
-#include "gbGlobals.h"
 #include "libretro.h"
 #include "video.h"
 #include "controller.h"
@@ -117,6 +117,7 @@ unsigned char **gb_buffer_vga;
 unsigned int **gb_buffer_vga32;
 
 unsigned char gb_delay_tick_cpu_micros= use_lib_delay_tick_cpu_micros;
+unsigned char gb_auto_delay_cpu= use_lib_delay_tick_cpu_auto;
 
 unsigned char tiempo_vga= 0;
 unsigned int gb_cpu_timer_before=0,gb_cpu_timer_cur=0;

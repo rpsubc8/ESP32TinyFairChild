@@ -13,12 +13,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include <Arduino.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gbConfig.h"
-#include "gbGlobals.h"
 //JJ #include "libretro.h"
 #include "channelf.h"
 #include "memory.h"
@@ -75,22 +75,49 @@ void CHANNELF_run(void) // run for one frame
 	int tick  = 0;
 	int ticks = CPU_Ticks_Debt;
 	unsigned char contCPU=0;
+	unsigned int cpu_before,cpu_cur;
+	int microsMedido,microsExacto;
+	int microsEspera;
 
-	while(ticks<TICKS_PER_FRAME)
-	{
-		tick = F8_exec(); //El que ejecuta el emulador
-		ticks+=tick;		
-		if ((contCPU & 0x03) == 0)
-		{//Cada 4 iteraciones 00000011
-		 //delayMicroseconds(4); //Esperar 4 micros por instruccion
-         delayMicroseconds(gb_delay_tick_cpu_micros);
-		}
-		contCPU++;
-		//if (ticks % 768 == 0)
-		 //delayMicroseconds(1000);
-		//AUDIO_tick(tick);
+    if (gb_auto_delay_cpu==1)
+	{//14914 ticks en 20 milis
+	 cpu_before= cpu_cur= micros();
+	 while(ticks<TICKS_PER_FRAME)
+	 {	  
+  	  tick = F8_exec(); //El que ejecuta el emulador      
+	  ticks+=tick;
+
+	  if ((contCPU & 0x03) == 0)
+	  {//Cada 4 iteraciones 00000011
+	   cpu_cur= micros();
+	   microsMedido= (cpu_cur-cpu_before);
+	   microsExacto= ((ticks * 20000)/TICKS_PER_FRAME);
+	   //180 micros y mido 30  180-30=60
+	   microsEspera= (microsExacto-microsMedido);
+	   if (microsEspera>0)
+	   {
+	    delayMicroseconds(microsEspera);
+	   }
+	  }
+	  contCPU++;
+	 }
 	}
-
+	else
+	{
+	 while(ticks<TICKS_PER_FRAME)
+	 {
+  	  tick = F8_exec(); //El que ejecuta el emulador
+	  ticks+=tick;		
+	  if ((contCPU & 0x03) == 0)
+	  {//Cada 4 iteraciones 00000011
+	   delayMicroseconds(gb_delay_tick_cpu_micros);	  
+	  }
+	  contCPU++;
+      //if (ticks % 768 == 0)
+	  //delayMicroseconds(1000);
+	  //AUDIO_tick(tick);
+	 }
+	}
 	CPU_Ticks_Debt = ticks - TICKS_PER_FRAME;
 	
   //printf("PC:0x%04X\n",PC0);

@@ -33,13 +33,13 @@ void MEMORY_reset(void);
 //JJ #define R_SIZE 64
 //JJ extern unsigned char R[R_SIZE]; // 64 byte Scratchpad
 
-extern unsigned char A; // Accumulator
-extern unsigned short PC0; // Program Counter
-extern unsigned short PC1; // Program Counter alternate
-extern unsigned short DC0; // Data Counter
-extern unsigned short DC1; // Data Counter alternate
-extern unsigned char ISAR; // Indirect Scratchpad Address Register (6-bit)
-extern unsigned char W; // Status Register (flags)
+//extern unsigned char A; // Accumulator
+//extern unsigned short PC0; // Program Counter
+//extern unsigned short PC1; // Program Counter alternate
+//extern unsigned short DC0; // Data Counter
+//extern unsigned short DC1; // Data Counter alternate
+//extern unsigned char ISAR; // Indirect Scratchpad Address Register (6-bit)
+//extern unsigned char W; // Status Register (flags)
 
 #ifdef use_lib_minimal_ram
  unsigned char tiny_read_memory(unsigned short int addrMem);

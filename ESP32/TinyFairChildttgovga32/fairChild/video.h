@@ -1,6 +1,7 @@
 #ifndef VIDEO_H
  #define VIDEO_H
 
+ #include "gbConfig.h"
  #include "gbGlobals.h"
 
 //	This file is part of FreeChaF.
@@ -21,11 +22,11 @@
 
 // 128x64
 //#define VIDEO_SIZE 8192
-extern unsigned char VIDEO_Buffer_raw[VIDEO_SIZE];
-extern unsigned char ARM;
-extern unsigned char X;
-extern unsigned char Y;
-extern unsigned char Color;
+//extern unsigned char VIDEO_Buffer_raw[VIDEO_SIZE];
+//extern unsigned char ARM;
+//extern unsigned char X;
+//extern unsigned char Y;
+//extern unsigned char Color;
 
 void VIDEO_portReceive(int port, int val);
 void PreparaColorVGA(void);

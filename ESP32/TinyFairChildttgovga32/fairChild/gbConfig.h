@@ -11,6 +11,7 @@
  #define use_lib_audio_ticker
 
  //16 microssegundos espera en cada tick
+ #define use_lib_delay_tick_cpu_auto 1
  #define use_lib_delay_tick_cpu_micros 16
 
  //Usa la librerua bitluni modificada en C tiny fast

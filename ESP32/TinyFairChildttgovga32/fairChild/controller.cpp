@@ -13,10 +13,11 @@
 //	You should have received a copy of the GNU General Public License
 //	along with FreeChaF.  If not, see http://www.gnu.org/licenses/
 
+#include "gbConfig.h"
+#include "gbGlobals.h"
 #include "controller.h"
 #include "ports.h"
 #include "channelf.h"
-#include "gbGlobals.h"
 
 #include <stdio.h>
 
