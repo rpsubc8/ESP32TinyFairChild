@@ -10,9 +10,10 @@ He realizado varias modificaciones:
  <li>Uso de un sólo core</li>
  <li>OSD de bajos recursos</li>
  <li>Creado proyecto compatible con Arduino IDE y Platform IO</li>
- <li>Se puede usar cualquier pin digital para el audio</li>
- <li>Ajuste de pantalla X</li>
- <li>Menú de velocidad de video de emulación, sonido, teclado</li>
+ <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en hardware.h)</li>
+ <li>Se puede usar cualquier pin digital para el video (hardware.h)</li>
+ <li>Ajuste de pantalla X e Y</li>
+ <li>Menú de velocidad de video de emulación, teclado</li>
  <li>Soporte para modo 64 colores.</li>   
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
