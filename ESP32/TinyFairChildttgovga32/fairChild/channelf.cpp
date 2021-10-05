@@ -94,7 +94,7 @@ void CHANNELF_run(void) // run for one frame
 	   microsExacto= ((ticks * 20000)/TICKS_PER_FRAME);
 	   //180 micros y mido 30  180-30=60
 	   microsEspera= (microsExacto-microsMedido);
-	   if (microsEspera>0)
+	   if ((microsEspera>0)&&(microsEspera<=20000))
 	   {
 	    delayMicroseconds(microsEspera);
 	   }
