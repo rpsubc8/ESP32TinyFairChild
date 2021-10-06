@@ -37,7 +37,7 @@ La imagen adjunta es de mi placa TTGO VGA32 v1.2 sin psram.
 
 <br><br>
 <h1>Tool chf2h</h1>
-He creado una herramienta muy básica, para convertir los archivos .chf en .h en modo lista para ser procesados por el emulador. Tan sólo tenemos que dejar los archivos .chf en la carpeta <b>input/cart</b> y ejecutar el archivo <b>chf2h.exe</b>, de forma que se generará una salida en el directorio <b>output/dataFlash</b>. Para pruebas, se ha dejado un archivo en el directorio <b>input/cart</b>, que se recomienda borrar en caso de realizar una nueva lista personalizada. También se recomienda borrar los archivos del directorio <b>fairChild/dataFlash/gbcart.h</b> y <b>fairChild/dataFlash/cart</b>para tener un proyecto limpio.<br><br>
+He creado una herramienta muy básica, para convertir los archivos .chf en .h en modo lista para ser procesados por el emulador. Tan sólo tenemos que dejar los archivos .chf en la carpeta <b>input/cart</b> y ejecutar el archivo <b>chf2h.exe</b>, de forma que se generará una salida en el directorio <b>output/dataFlash</b>. Para pruebas, se ha dejado un archivo en el directorio <b>input/cart</b>, que se recomienda borrar en caso de realizar una nueva lista personalizada. También se recomienda borrar los archivos del directorio <b>fairChild/dataFlash/gbcart.h</b> y <b>fairChild/dataFlash/cart</b> para tener un proyecto limpio.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
 <br><br>
 <pre>
