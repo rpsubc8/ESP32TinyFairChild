@@ -48,7 +48,7 @@ Está todo preparado para no tener que instalar ninguna librería.
 <br><br>
 <h1>Arduino IDE</h1>
 Todo el proyecto es compatible con la estructura de Arduino 1.8.11.
-Tan sólo tenemos que abrir el <b>CPCem.ino</b> del directorio <b>fairChild</b>.
+Tan sólo tenemos que abrir el <b>fairChild.ino</b> del directorio <b>fairChild</b>.
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoIDEpreferences.gif'></center>
 Debemos instalar las extensiones de spressif en el gestor de urls adicionales de tarjetas <b>https://dl.espressif.com/dl/package_esp32_index.json</b>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoIDElibrary.gif'></center>
@@ -60,9 +60,9 @@ Debemos desactivar la opción de PSRAM, y en caso de superar 1 MB de binario, se
 <h1>Teclado</h1>
 El teclado está dividido en 3 partes
 <ul>
- </li>Control de Sistema: 0,1,2,3</li>
- </li>Control A: Izquierda, Derecha, Arriba, Abajo, o,p</li>
- </li>Control B: a,d,w,s   c,v/li>
+ <li>Control de Sistema: 0,1,2,3</li>
+ <li>Control A: Izquierda, Derecha, Arriba, Abajo, o,p</li>
+ <li>Control B: a,d,w,s   c,v/li>
 </ul>
 
 
