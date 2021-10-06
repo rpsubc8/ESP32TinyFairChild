@@ -30,7 +30,7 @@ Se requiere:
   <li>Arduino IDE 1.8.11</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
-La imagen adjunta es de mi placa TTGO VGA32 v1.2 sin psram.
+La imagen adjunta es de mi placa TTGO VGA32 v1.2 sin psram ni módulo de SD.
 <br>
 
 
