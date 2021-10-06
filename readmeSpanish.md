@@ -25,7 +25,7 @@ He realizado varias modificaciones:
 <h1>Requerimientos</h1>
 Se requiere:
  <ul>
-  <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) or Single core ESP32</li>
+  <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
   <li>Arduino IDE 1.8.11</li>
  </ul>
@@ -38,7 +38,7 @@ La imagen adjunta es de mi placa TTGO VGA32 v1.2 sin psram.
 <br><br>
 <h1>Tool chf2h</h1>
 He creado una herramienta muy básica, para convertir los archivos .chf en .h en modo lista para ser procesados por el emulador. Tan sólo tenemos que dejar los archivos .chf en la carpeta <b>input/cart</b> y ejecutar el archivo <b>chf2h.exe</b>, de forma que se generará una salida en el directorio <b>output/dataFlash</b>. Para pruebas, se ha dejado un archivo en el directorio <b>input/cart</b>, que se recomienda borrar en caso de realizar una nueva lista personalizada. También se recomienda borrar los archivos del directorio <b>fairChild/dataFlash/gbcart.h</b> y <b>fairChild/dataFlash/cart</b>para tener un proyecto limpio.<br><br>
-<a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools/chf2h'>Tool chf2h</a>
+<a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
 <br><br>
 <pre>
  input/
