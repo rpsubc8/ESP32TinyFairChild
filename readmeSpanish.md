@@ -19,3 +19,15 @@ He realizado varias modificaciones:
  <li>VGA 320x200</li>
  <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
 </ul> 
+
+
+<br>
+<h1>Requerimientos</h1>
+Se requiere:
+ <ul>
+  <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) or Single core ESP32</li>
+  <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
+  <li>Arduino IDE 1.8.11</li>
+ </ul>
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
+<br>
