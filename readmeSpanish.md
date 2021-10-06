@@ -60,7 +60,7 @@ El teclado está dividido en 3 partes
 <ul>
  <li>Control de Sistema: 0,1,2,3</li>
  <li>Control A: Izquierda, Derecha, Arriba, Abajo, o,p</li>
- <li>Control B: a,d,w,s   c,v/li>
+ <li>Control B: a,d,w,s   c,v</li>
 </ul>
 
 
