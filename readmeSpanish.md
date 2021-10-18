@@ -63,6 +63,22 @@ El teclado está dividido en 3 partes
  <li>Control B: a,d,w,s   c,v</li>
 </ul>
 
+<br><br>
+<h1>Opciones</h1>
+El archivo <b>gbConfig.h</b> se seleccionan las opciones:
+<ul>
+ <li><b>use_lib_200x150:</b> Se usa modo de vídeo 200x150. Se tiene que elegir sólo un modo de video, o bien 200x150 o 320x200</li>
+ <li><b>use_lib_320x200:</b> Se usa modo de vídeo 320x200.</li>
+ <li><b>FIX_PERIBOARD_NOT_INITING:</b> En aquellos teclados que necesitan ECO para inicializarse. Sólución de David Crespo Tascón.</li>
+ <li><b>use_lib_log_serial:</b> Permite dejar trazas por el puerto serie usb. Si se activa, consume un poco más de RAM, CPU y FLASH.</li>
+ <li><b>gb_ms_keyboard:</b> Se debe especificar el número de milisegundos de polling para el teclado.</li>
+ <li><b>gb_ms_vga:</b> Se debe especificar el número de milisegundos de polling para el frame VGA.</li>
+ <li><b>gb_add_offset_x:</b> Desplazamiento a la derecha del frame en múltiplos de 4 pixels.</li>
+ <li><b>gb_add_offset_y:</b> Desplazamiento hacia abajo del frame en pixels.</li>
+ <li><b>use_lib_delay_tick_cpu_auto:</b> Si es 1, se autoajusta la velocidad de emulación a 14914 ticks de 20 milis. Si es 0, se espera los milis especificados en use_lib_delay_tick_cpu_micros </li>
+ <li><b>use_lib_delay_tick_cpu_micros:</b> Se debe especificar el número de milisegundos a esperar la CPU, mientras que use_lib_delay_tick_cpu_auto sea 0.</li>
+</ul>  
+
 
 <br><br>
 <h1>Tool chf2h</h1>
