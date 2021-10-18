@@ -55,17 +55,17 @@ We must disable the PSRAM option, and in case of exceeding 1 MB of binary, selec
 
 
 <br><br>
-<h1>Keyboard</h1>.
+<h1>Keyboard</h1>
 The keyboard is divided into 3 parts
 <ul>
  <li>System Control: 0,1,2,3</li>
- <li>Control A: Left, Right, Up, Down, o,p</li>.
+ <li>Control A: Left, Right, Up, Down, o,p</li>
  <li>Control B: a,d,w,s c,v</li>
 </ul>
 
 
 <br><br>
-<h1>Tool chf2h</h1>.
+<h1>Tool chf2h</h1>
 I have created a very basic tool, to convert .chf files to .h in ready mode to be processed by the emulator. We just have to leave the .chf files in the <b>input/cart</b> folder and run the <b>chf2h.exe</b> file, so that an output will be generated in the <b>output/dataFlash</b> directory. For testing purposes, a file has been left in the <b>input/cart</b> directory, which it is recommended to delete in case of making a new custom list. It is also recommended to delete the files in the <b>fairChild/dataFlash/gbcart.h</b> and <b>fairChild/dataFlash/cart</b> directory to have a clean project.<br><br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
 <br><br>
