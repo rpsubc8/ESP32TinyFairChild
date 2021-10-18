@@ -35,9 +35,9 @@ The attached image is of my TTGO VGA32 v1.2 board without psram or SD module.
 
 
 <br><br>
-<h1>PlatformIO</h1>.
+<h1>PlatformIO</h1>
 PLATFORMIO 2.2.0 must be installed from the Visual Studio extensions.
-<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewPlatformIOinstall.gif'></center>.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewPlatformIOinstall.gif'></center>
 Then the working directory <b>TinyFairChildttgovga32</b> will be selected.
 We must modify the <b>platformio.ini</b> file <b>upload_port</b> option to select the COM port where we have our TTGO VGA32 board.
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewPlatformIO.gif'></center>
