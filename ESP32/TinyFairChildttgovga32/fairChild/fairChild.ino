@@ -104,7 +104,7 @@ unsigned char gb_force_load_cart=0;
 unsigned char gb_id_cur_cart=0;
 
 unsigned char gb_cpunoexe=0;
-int gb_cpunoexe_timer_ini;
+unsigned int gb_cpunoexe_timer_ini;
 unsigned short int tiempo_ini_cpu,tiempo_fin_cpu;
 unsigned short int total_tiempo_ms_cpu;
 unsigned short int tiene_que_tardar;
@@ -362,10 +362,14 @@ void loop()
   retro_init();
  }     
 
+ //BEGIN one frame 20 ms  
  if (gb_cpunoexe == 0)
- {  
+ {    
   tiempo_cur_keyboard= millis();  
-  if ((tiempo_cur_keyboard-tiempo_ini_keyboard)>= gb_keyboard_cur_poll_ms) //20 ms
+  if ((tiempo_cur_keyboard-tiempo_ini_keyboard)< gb_keyboard_cur_poll_ms) //20 ms
+  {
+  }
+  else
   {
    tiempo_ini_keyboard= tiempo_cur_keyboard; 
    Poll_Keyboard();
@@ -381,14 +385,15 @@ void loop()
   if (gb_cur_cpu_ticks>gb_max_cpu_ticks)
    gb_max_cpu_ticks= gb_cur_cpu_ticks;
   if (gb_cur_cpu_ticks<gb_min_cpu_ticks)   
-   gb_min_cpu_ticks= gb_cur_cpu_ticks;  
+   gb_min_cpu_ticks= gb_cur_cpu_ticks;   
  }
+ //END one frame 20 ms  
 
  if (gb_show_osd_main_menu == 1)
  {
   do_tinyOSD();
  }
-
+ 
 
  if (gb_cpunoexe == 0)
  {
@@ -400,13 +405,15 @@ void loop()
  }
  else
  {
-  if ((millis()-gb_cpunoexe_timer_ini)>=tiene_que_tardar)
+  if ((millis()-gb_cpunoexe_timer_ini) < tiene_que_tardar)
   {
-   gb_cpunoexe=0;      
+  }
+  else
+  {
+   gb_cpunoexe=0;
   }
   gb_cpunoexe=0;
-  gb_volumen01=0;
-  gb_frecuencia01=0;
+  gb_volumen01= gb_frecuencia01=0;  //Silencio PWM Audio
   //Audio PWM ledcWriteTone(1,0);
   #ifdef use_lib_audio_tone32
    Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
@@ -414,7 +421,10 @@ void loop()
  }
 
  tiempo_cur_vga= millis();
- if ((tiempo_cur_vga-tiempo_ini_vga)>= gb_vga_cur_poll_ms) //20
+ if ((tiempo_cur_vga-tiempo_ini_vga) < gb_vga_cur_poll_ms) //20
+ {
+ }
+ else
  {
   tiempo_ini_vga= tiempo_cur_vga;
   jj_ini_vga = micros();
@@ -431,7 +441,10 @@ void loop()
 
 
  gb_cpu_timer_cur= millis();
- if ((gb_cpu_timer_cur-gb_cpu_timer_before)>1000)
+ if ((gb_cpu_timer_cur-gb_cpu_timer_before)<1000)
+ {   
+ }
+ else
  {
   gb_cpu_timer_before= gb_cpu_timer_cur;
   if (tiempo_vga == 1)

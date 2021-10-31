@@ -434,10 +434,10 @@ void ShowTinyVGAPollMenu()
  aSelNum = ShowTinyMenu("Poll ms VGA",gb_speed_video_poll_menu,max_gb_speed_video_poll_menu );
  switch (aSelNum)
  {
-  case 0: gb_keyboard_cur_poll_ms= 20; break;
-  case 1: gb_keyboard_cur_poll_ms= 30; break;
-  case 2: gb_keyboard_cur_poll_ms= 40; break;
-  case 3: gb_keyboard_cur_poll_ms= 50; break;  
+  case 0: gb_vga_cur_poll_ms= 20; break;
+  case 1: gb_vga_cur_poll_ms= 30; break;
+  case 2: gb_vga_cur_poll_ms= 40; break;
+  case 3: gb_vga_cur_poll_ms= 50; break;  
  }
 }
 
