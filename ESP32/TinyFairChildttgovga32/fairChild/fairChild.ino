@@ -105,9 +105,9 @@ unsigned char gb_id_cur_cart=0;
 
 unsigned char gb_cpunoexe=0;
 unsigned int gb_cpunoexe_timer_ini;
-unsigned short int tiempo_ini_cpu,tiempo_fin_cpu;
-unsigned short int total_tiempo_ms_cpu;
-unsigned short int tiene_que_tardar;
+unsigned int tiempo_ini_cpu,tiempo_fin_cpu;
+unsigned int total_tiempo_ms_cpu;
+unsigned int tiene_que_tardar;
 
 unsigned int tiempo_ini_vga,tiempo_cur_vga;
 
