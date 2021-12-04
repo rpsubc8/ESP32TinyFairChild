@@ -65,6 +65,23 @@ The keyboard is divided into 3 parts
 
 
 <br><br>
+<h1>Opciones</h1>
+The <b>gbConfig.h</b> file options are selected:
+<ul>
+ <li><b>use_lib_200x150:</b> Video mode 200x150 is used. You have to choose only one video mode, either 200x150 or 320x200.</li>
+ <li><b>use_lib_320x200:</b> 320x200 video mode is used.</li>
+ <li><b>use_lib_vga8colors:</b> Forces to use RGB 8-color mode (3 pins). Outputs 8 colors, as opposed to 64 in normal mode (6 pins RRGGBB)</li>
+ <li><b>FIX_PERIBOARD_NOT_INITING:</b> In those keyboards that need ECO to initialize. Solution by David Crespo Tascón.</li>
+ <li><b>use_lib_log_serial:</b> It allows to leave traces through the usb serial port. If enabled, it consumes a little more RAM, CPU and FLASH..</li>
+ <li><b>gb_ms_keyboard:</b> The number of polling milliseconds for the keyboard must be specified.</li>
+ <li><b>gb_ms_vga:</b> The number of polling milliseconds for the VGA frame must be specified.</li>
+ <li><b>gb_add_offset_x:</b> Shift to the right of the frame in multiples of 4 pixels.</li>
+ <li><b>gb_add_offset_y:</b> Downward displacement of the frame in pixels.</li>
+ <li><b>use_lib_delay_tick_cpu_auto:</b> If 1, the emulation speed is auto-set to 14914 ticks of 20 millis. If 0, it waits for the millis specified in use_lib_delay_tick_cpu_micros.</li>
+ <li><b>use_lib_delay_tick_cpu_micros:</b> The number of milliseconds to wait for the CPU while use_lib_delay_tick_cpu_auto is 0 must be specified.</li>
+</ul>  
+
+<br><br>
 <h1>Tool chf2h</h1>
 I have created a very basic tool, to convert .chf files to .h in ready mode to be processed by the emulator. We just have to leave the .chf files in the <b>input/cart</b> folder and run the <b>chf2h.exe</b> file, so that an output will be generated in the <b>output/dataFlash</b> directory. For testing purposes, a file has been left in the <b>input/cart</b> directory, which it is recommended to delete in case of making a new custom list. It is also recommended to delete the files in the <b>fairChild/dataFlash/gbcart.h</b> and <b>fairChild/dataFlash/cart</b> directory to have a clean project.<br><br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
