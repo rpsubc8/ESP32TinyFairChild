@@ -14,7 +14,7 @@ He realizado varias modificaciones:
  <li>Se puede usar cualquier pin digital para el video (hardware.h)</li>
  <li>Ajuste de pantalla X e Y</li>
  <li>Menú de velocidad de video de emulación, teclado</li>
- <li>Soporte para modo 64 colores.</li>   
+ <li>Soporte para modo 64 colores y 8 colores.</li>   
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
  <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
@@ -69,6 +69,7 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
 <ul>
  <li><b>use_lib_200x150:</b> Se usa modo de vídeo 200x150. Se tiene que elegir sólo un modo de video, o bien 200x150 o 320x200</li>
  <li><b>use_lib_320x200:</b> Se usa modo de vídeo 320x200.</li>
+ <li><b>use_lib_vga8colors:</b> Obliga a usar RGB modo de 8 colores (3 pines). Saca 8 colores, frente a los 64 del modo normal (6 pines RRGGBB).</li>
  <li><b>FIX_PERIBOARD_NOT_INITING:</b> En aquellos teclados que necesitan ECO para inicializarse. Sólución de David Crespo Tascón.</li>
  <li><b>use_lib_log_serial:</b> Permite dejar trazas por el puerto serie usb. Si se activa, consume un poco más de RAM, CPU y FLASH.</li>
  <li><b>gb_ms_keyboard:</b> Se debe especificar el número de milisegundos de polling para el teclado.</li>
