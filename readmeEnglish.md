@@ -65,7 +65,7 @@ The keyboard is divided into 3 parts
 
 
 <br><br>
-<h1>Opciones</h1>
+<h1>Options</h1>
 The <b>gbConfig.h</b> file options are selected:
 <ul>
  <li><b>use_lib_200x150:</b> Video mode 200x150 is used. You have to choose only one video mode, either 200x150 or 320x200.</li>
