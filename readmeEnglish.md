@@ -14,7 +14,7 @@ I have made several modifications:
  <li>Any digital pin can be used for video (hardware.h).</li>
  <li>X and Y screen adjustment</li>
  <li>Emulation video speed menu, keyboard</li>
- <li>Support for 64-color mode.</li>   
+ <li>Support for 64-color mode and 8-color mode.</li>   
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
  <li>The complete bitluni library is not required. I have reduced to the minimum, saving RAM and FLASH, based on Ricardo Massaro's library.</li>
