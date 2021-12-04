@@ -25,7 +25,7 @@
  #endif 
 #endif 
 #include "fairChild.h"
-#ifdef use_lib_bitluni_fast
+#ifdef use_lib_tinybitluni_fast
 #else
  #include "MartianVGA.h"
  #include "def/Font.h"
@@ -41,7 +41,7 @@
 
 //#include "dataFlash/gbrom.h"
 //#include "PS2Boot/PS2KeyCode.h"
-#ifdef use_lib_bitluni_fast
+#ifdef use_lib_tinybitluni_fast
  #include "vga_6bit.h"
  // VGA output pins
  //#define PIN_RED_LOW    21
@@ -53,20 +53,36 @@
  //#define PIN_HSYNC      23
  //#define PIN_VSYNC      15
 
- static const unsigned char pin_config[] = {
-  PIN_RED_LOW,
+ #ifdef use_lib_vga8colors
+  //DAC 3 bits 8 colores
+  // 3 bit pins  
+ static const unsigned char pin_config[] = {  
   PIN_RED_HIGH,
-  PIN_GREEN_LOW,
-  PIN_GREEN_HIGH,
-  PIN_BLUE_LOW,
+  PIN_GREEN_HIGH,  
   PIN_BLUE_HIGH,
+  255,
+  255,
+  255,
   PIN_HSYNC,
   PIN_VSYNC
  };
+ #else
+  //DAC 6 bits 64 colores
+  static const unsigned char pin_config[] = {
+   PIN_RED_LOW,
+   PIN_RED_HIGH,
+   PIN_GREEN_LOW,
+   PIN_GREEN_HIGH,
+   PIN_BLUE_LOW,
+   PIN_BLUE_HIGH,
+   PIN_HSYNC,
+   PIN_VSYNC
+  };
+ #endif 
 
 #endif
 
-#ifdef use_lib_bitluni_fast 
+#ifdef use_lib_tinybitluni_fast 
  //unsigned char **framebuffer = vga_get_framebuffer();
  //unsigned char **gb_buffer_vga= vga_get_framebuffer();
  unsigned char gb_sync_bits;
@@ -138,7 +154,7 @@ void my_callback_speaker_func(void);
 //****************************
 //void SDL_DumpVGA(void)
 //{
-// #ifdef use_lib_bitluni_fast        
+// #ifdef use_lib_tinybitluni_fast        
 //  //framebuffer = vga_get_framebuffer();  
 //  for (int y=0;y<10;y++)
 //  {
@@ -187,7 +203,7 @@ void setup()
   Serial.printf("HEAP BEGIN %d\n", ESP.getFreeHeap()); 
  #endif
  
- #ifdef use_lib_bitluni_fast  
+ #ifdef use_lib_tinybitluni_fast  
   //void vga_init(const int *pin_map, const VgaMode &mode, bool double_buffered)
   //vga_init(pin_config,vga_mode_320x240,false);
   //vga_init(pin_config,vga_mode_320x200,false); //funciona

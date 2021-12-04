@@ -4,12 +4,12 @@
  #include "gbConfig.h"
  #include "gbGlobals.h"
  #include "hardware.h"
- #ifndef use_lib_bitluni_fast 
+ #ifndef use_lib_tinybitluni_fast 
   #include "MartianVGA.h"
  #endif 
 
  // Declared vars
- #ifdef use_lib_bitluni_fast
+ #ifdef use_lib_tinybitluni_fast
  #else
   #ifdef use_lib_bitluni_3bpp
    #ifdef use_lib_bitluni_low_memory

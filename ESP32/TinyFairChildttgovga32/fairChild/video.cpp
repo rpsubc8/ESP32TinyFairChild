@@ -33,11 +33,18 @@ static unsigned char gb_color_vga[8]=
 //**************************************************
 void PreparaColorVGA()
 {
- #ifdef use_lib_bitluni_fast
-  for (unsigned char i=0;i<8;i++)
-  {  
-   gb_color_vga[i] = gb_color_vga[i] | gb_sync_bits;  
-  } 
+ #ifdef use_lib_tinybitluni_fast
+  #ifdef use_lib_vga8colors
+   for (unsigned char i=0;i<8;i++)
+   {  
+    gb_color_vga[i] = (gb_color_vga[i] & 0x07) | gb_sync_bits;  
+   }  
+  #else
+   for (unsigned char i=0;i<8;i++)
+   {  
+    gb_color_vga[i] = (gb_color_vga[i] & 0x3F) | gb_sync_bits;  
+   }
+  #endif 
  #else	
   for (unsigned char i=0;i<8;i++)
   {  

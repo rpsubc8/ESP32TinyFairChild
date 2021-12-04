@@ -1,6 +1,6 @@
 #include "gbConfig.h"
 #include "gbGlobals.h"
-#ifndef use_lib_bitluni_fast
+#ifndef use_lib_tinybitluni_fast
  #include "MartianVGA.h"
 #endif 
 #include "fairChild.h"

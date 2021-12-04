@@ -14,13 +14,16 @@
  #define use_lib_delay_tick_cpu_auto 1
  #define use_lib_delay_tick_cpu_micros 16
 
- //Usa la librerua bitluni modificada en C tiny fast
- #define use_lib_bitluni_fast
+ //Usa la libreria bitluni modificada en C tiny fast
+ #define use_lib_tinybitluni_fast
 
  
  //Selecionar solo uno (use_lib_200x150 o use_lib_320x200)
  #define use_lib_200x150
  //#define use_lib_320x200
+
+ //Video colors (8 colores es DAC 3 bits)
+ //#define use_lib_vga8colors
 
  //Logs
  #define use_lib_log_serial
