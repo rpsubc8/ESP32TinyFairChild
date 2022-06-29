@@ -18,6 +18,7 @@ I have made several modifications:
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
  <li>The complete bitluni library is not required. I have reduced to the minimum, saving RAM and FLASH, based on Ricardo Massaro's library.</li>
+ <li>Support for reading cartridges via WIFI</li>
  <li>Precompiled version (flash download 3.9.2) 200x150</li>
 </ul> 
 
