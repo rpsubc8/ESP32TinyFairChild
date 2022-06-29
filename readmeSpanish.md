@@ -19,13 +19,13 @@ He realizado varias modificaciones:
  <li>VGA 320x200</li>
  <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
  <li>Soporte para leer cartuchos via WIFI</li>
- <li>Versión precompilada (flash download 3.9.2)</li>
+ <li>Versión precompilada (flash download 3.9.2) 200x150</li>
 </ul> 
 
 
 <br><br>
 <h1>Versión precompilada</h1>
-En la carpeta precompile se encuentra una versión ya compilada para poder ser grabada con el flash download tool 3.9.2. Se trata de una versión con los juegos de demostración en FLASH.<br><br>
+En la carpeta precompile se encuentra una versión ya compilada para poder ser grabada con el flash download tool 3.9.2. Se trata de una versión con resolución 200x150 con los juegos de demostración en FLASH.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile'>https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile</a>
 <br><br>
 Debemos de elegir el tipo ESP32:
