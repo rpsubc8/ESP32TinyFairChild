@@ -92,6 +92,7 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
  <li><b>gb_add_offset_y:</b> Desplazamiento hacia abajo del frame en pixels.</li>
  <li><b>use_lib_delay_tick_cpu_auto:</b> Si es 1, se autoajusta la velocidad de emulación a 14914 ticks de 20 milis. Si es 0, se espera los milis especificados en use_lib_delay_tick_cpu_micros </li>
  <li><b>use_lib_delay_tick_cpu_micros:</b> Se debe especificar el número de milisegundos a esperar la CPU, mientras que use_lib_delay_tick_cpu_auto sea 0.</li>
+ <li><b>use_lib_wifi:</b>Activa la WIFI para poder cargar cartuchos desde un servidor web. Al requerir mucha RAM, se aconseja usar un servidor http, en lugar de https. Se debe introducir el nombre de red y clave en el fichero gbWifiConfig.h</li>
 </ul>  
 
 
@@ -143,7 +144,7 @@ https://rpsubc8.github.io/ESP32TinyFairChild/www/fairchild/output
  El concepto es simple, se dispone de:
  <pre>
   outlist --> Fichero con la lista de nombres (longitud 8) de chf. Límite de 128 ficheros
-  outdat  --> Los fichero bin.
+  outdat  --> Los ficheros chf.
  </pre>
  Por ahora, para optimizar el consumo de RAM, se ha dejado una estructura de longitud de nombres 8:3, es decir, 8 caracteres de nombre y 3 de extensión. Dejo unas tools intermedias para preparar y hacer la conversión:<br>
  <pre>
