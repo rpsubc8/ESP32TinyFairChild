@@ -10,8 +10,13 @@
  #define ControlA 1
  #define ControlB 2
  
+ #ifdef use_lib_wifi
+  extern unsigned char gb_buffer_wifi[1024]; //128 * 8
+  extern int gb_size_file_wifi;
+  extern char gb_cadUrl[128];
+ #endif 
+
  extern struct hle_state_s hle_state;
- 
  
  #define MEMORY_SIZE 0x10000
  extern unsigned char Memory[MEMORY_SIZE];
@@ -67,10 +72,13 @@
  extern volatile int gb_volumen01;
  extern volatile int gb_duracion01;
 
- //#define SAMPLE_RATE 16000
+ //#define SAMPLE_RATE 16000 
  //Frecuencia correcta 1500
  #define SAMPLE_RATE 1500
  //#define SAMPLE_RATE 3000
+ //#define SAMPLE_RATE 12000 
+ //#define SAMPLE_RATE 1000
+ //#define SAMPLE_RATE 500
  
  extern volatile unsigned int gb_pulsos_onda;
  extern volatile unsigned int gb_cont_my_callbackfunc; 

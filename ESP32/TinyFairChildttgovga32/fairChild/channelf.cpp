@@ -27,6 +27,11 @@
 #include "f2102.h"
 #include "ports.h"
 #include "video.h"
+#ifdef use_lib_wifi
+ #include "gbWifiConfig.h"
+ #include "gbWifi.h"
+ #include "osd.h"
+#endif
 
 int CPU_Ticks_Debt = 0;
 
@@ -52,6 +57,103 @@ int CPU_Ticks_Debt = 0;
 //	}
 //   return 0;
 //}
+
+#ifdef use_lib_wifi
+ int CHANNELF_loadROM_mem_wifi(int address)
+ {
+  int auxFileSize=0;
+  int length = 0;  
+  if (strcmp(gb_cadUrl,"")==0)
+  {
+   #ifdef use_lib_wifi_debug
+    Serial.printf("cart name empty\n");
+   #endif   
+   return 1;
+  }
+  
+  #ifdef use_lib_wifi_debug
+   Serial.printf("load_cart_WIFI\n");
+  #endif
+  #ifdef use_lib_wifi_debug
+   Serial.printf("Check WIFI\n");
+  #endif
+
+  ShowStatusWIFI(1);
+
+  if (Check_WIFI() == false)
+  {
+   ShowStatusWIFI(0);
+   return 1;
+  }    
+
+  int leidos=0;
+  #ifdef use_lib_wifi_debug
+   //Serial.printf("URL:%s\n",cadUrl);
+   Serial.printf("URL:%s\n",gb_cadUrl);   
+  #endif   
+  //Asignar_URL_stream_WIFI(cadUrl);
+  Asignar_URL_stream_WIFI(gb_cadUrl);
+  auxFileSize= gb_size_file_wifi;
+
+  length = auxFileSize;
+  if (length > 0x10000 - address)
+  {
+   length = 0x10000 - address;
+  }
+
+  #ifdef use_lib_wifi_debug
+   Serial.printf("Size cart:%d\n",gb_size_file_wifi);
+  #endif
+  Leer_url_stream_WIFI(&leidos);
+  #ifdef use_lib_wifi_debug
+   Serial.printf("Leidos:%d\n",leidos); //Leemos 1024 bytes
+  #endif
+
+  //He leido 1024 bytes. Lee resto
+  int contBuffer=0;
+  int cont1024= 0;
+  while (contBuffer< auxFileSize)
+  {
+   if (contBuffer>= length)
+   {
+    #ifdef use_lib_wifi_debug
+     Serial.printf("Limit exced 0x10000\n");
+    #endif            
+    break;
+   }
+   //cart[contBuffer]= gb_buffer_wifi[cont1024];
+   Memory[(address+contBuffer)] = gb_buffer_wifi[cont1024];
+   contBuffer++;
+
+   cont1024++;
+   if (cont1024 >= 1024)
+   {
+    Leer_url_stream_WIFI(&leidos);
+    #ifdef use_lib_wifi_debug
+     Serial.printf("Leidos:%d\n",leidos);
+    #endif 
+    cont1024= 0;
+   }
+  }
+  ShowStatusWIFI(0);
+
+  if (address+length>MEMORY_RAMStart) { MEMORY_RAMStart = address+length; }
+
+//	int length = size;
+//	if (length > 0x10000 - address)
+//	{
+//		length = 0x10000 - address;
+//	}
+//	#ifdef use_lib_minimal_ram
+//	#else
+// 	 memcpy(Memory + address, data, length);
+//	#endif
+//		
+//	if (address+length>MEMORY_RAMStart) { MEMORY_RAMStart = address+length; }
+
+	return 1;
+ }
+#endif 
 
 int CHANNELF_loadROM_mem(const unsigned char* data, int size, int address)
 {

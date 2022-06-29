@@ -9,4 +9,5 @@
  //SDL_Surface * SDLOSDGetSurface();
  void SDLEsperaTeclado(void);
  void SDLClear(void);
+ void ShowStatusWIFI(unsigned char aState);
 #endif

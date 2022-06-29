@@ -12,23 +12,24 @@
 //  Left,Right,Up,Down   o,p
 // Keyboard 2
 //  a,d,w,s   c,v
+//Support load cart WIFI server web
 
 #include "gbConfig.h"
 #include "gbGlobals.h"
 #include "PS2Kbd.h"
 #include <Arduino.h>
-#ifdef use_lib_audio_tone32
- #include "Tone32.h"
-#else 
+//#ifdef use_lib_audio_tone32
+// #include "Tone32.h"
+//#else 
  #ifdef use_lib_audio_ticker
   #include <Ticker.h>
  #endif 
-#endif 
+//#endif 
 #include "fairChild.h"
 #ifdef use_lib_tinybitluni_fast
 #else
- #include "MartianVGA.h"
- #include "def/Font.h"
+ //#include "MartianVGA.h"
+ //#include "def/Font.h"
 #endif 
 #include "hardware.h"
 #include "driver/timer.h"
@@ -38,6 +39,22 @@
 #include "controller.h"
 #include "osd.h"
 #include "PS2KeyCode.h"
+
+#ifdef use_lib_wifi
+ #include "gbWifi.h"
+ #include <WiFi.h>
+ //#include <WiFiMulti.h>
+ #include <HTTPClient.h>
+ #include "gbWifiConfig.h"
+ //#include <esp_wifi.h>
+ //WiFiMulti wifiMulti;
+ HTTPClient http;
+ WiFiClient * stream;
+ 
+ unsigned char gb_buffer_wifi[1024]; //128 ficheros * 8
+ int gb_size_file_wifi=0; 
+ char gb_cadUrl[128]="";
+#endif
 
 //#include "dataFlash/gbrom.h"
 //#include "PS2Boot/PS2KeyCode.h"
@@ -98,12 +115,13 @@
  #endif 
 #endif 
 
-#ifdef use_lib_audio_tone32
-#else
+//#ifdef use_lib_audio_tone32
+//#else
  #ifdef use_lib_audio_ticker
   Ticker gb_ticker_callback;
+  //hw_timer_t * gb_timer = NULL;
  #endif 
-#endif
+//#endif
 
 volatile unsigned int gb_pulsos_onda=0;
 volatile unsigned int gb_cont_my_callbackfunc=0;
@@ -147,7 +165,11 @@ unsigned char gb_vga_cur_poll_ms= gb_ms_vga;
 //Funciones
 void Setup(void);
 void Poll_Keyboard(void);
-void my_callback_speaker_func(void);
+
+#ifdef use_lib_audio_ticker
+ void IRAM_ATTR my_callback_speaker_func(void);
+#endif 
+//void my_callback_speaker_func(void);
 //void SDL_DumpVGA(void);
 
 
@@ -189,11 +211,11 @@ void setup()
  //REG_WRITE(GPIO_OUT_W1TC_REG , BIT25); //LOW clear
  digitalWrite(SPEAKER_PIN, LOW);
  
- #ifdef use_lib_audio_tone32
-  ledcSetup(SPEAKER_CHANNEL,8000,8);
-  ledcAttachPin(SPEAKER_PIN,SPEAKER_CHANNEL);
-  ledcWriteTone(SPEAKER_CHANNEL,SPEAKER_CHANNEL);
- #endif
+ //#ifdef use_lib_audio_tone32
+ // ledcSetup(SPEAKER_CHANNEL,8000,8);
+ // ledcAttachPin(SPEAKER_PIN,SPEAKER_CHANNEL);
+ // ledcWriteTone(SPEAKER_CHANNEL,SPEAKER_CHANNEL);
+ //#endif
  //Audio PWM ledcSetup(1,1E5,4);
  //Audio PWM ledcAttachPin(SPEAKER_PIN,1);
  //Audio PWM ledcWriteTone(1,0); 
@@ -279,15 +301,48 @@ void setup()
 
  kb_begin();
 
+
+ #ifdef use_lib_wifi
+  #ifdef use_lib_log_serial
+   Serial.printf("RAM before WIFI %d\n",ESP.getFreeHeap());
+  #endif 
+  WiFi.mode(WIFI_STA);
+  //esp_wifi_set_ps(WIFI_PS_NONE); //Ahorro energia desactivado
+  WiFi.begin(gb_wifi_ssd, gb_wifi_pass);
+
+  for(unsigned char t = 4; t > 0; t--)
+  {
+   #ifdef use_lib_wifi_debug
+    Serial.printf("WIFI WAIT %d...\n", t);
+    Serial.flush();
+   #endif
+   delay(1000);
+  }
+
+  Asignar_WIFI(&http, stream);
+  Check_WIFI();
+  #ifdef use_lib_wifi_debug
+   Serial.print("IP address:");
+   Serial.println(WiFi.localIP());
+  #endif 
+ #endif
+
+
  retro_init();
 
- #ifdef use_lib_audio_tone32
- #else
+ //#ifdef use_lib_audio_tone32
+ //#else
   #ifdef use_lib_audio_ticker
    float auxTimer= (float)1.0/(float)SAMPLE_RATE; 
    gb_ticker_callback.attach(auxTimer,my_callback_speaker_func);  
+
+   //gb_timer = timerBegin(0, 80, true); //Timer 0
+   //gb_timer = timerBegin(2, 80, true); //Timer 2
+   //timerAttachInterrupt(gb_timer, &my_callback_speaker_func, true);
+   //timerAlarmWrite(gb_timer, (1000000/SAMPLE_RATE), true); //1.000.000 DIV 16.000 
+   //timerAlarmEnable(gb_timer);   
   #endif 
- #endif 
+ //#endif 
 
  
  tiempo_ini_vga = tiempo_cur_vga= tiempo_ini_keyboard= tiempo_cur_keyboard= millis();
@@ -329,7 +384,8 @@ void Poll_Keyboard()
 }
 
 #ifdef use_lib_audio_ticker
-void my_callback_speaker_func()
+//void my_callback_speaker_func()
+void IRAM_ATTR my_callback_speaker_func()
 { 
  gb_cont_my_callbackfunc++;
  if (gb_cont_my_callbackfunc>=gb_pulsos_onda)
@@ -392,6 +448,7 @@ void loop()
   }  
   tiempo_ini_cpu= millis();
   jj_ini_cpu = micros();
+  //gb_volumen01= gb_frecuencia01=0;  //Silencio PWM Audio
   retro_run();
   jj_end_cpu = micros();
   tiempo_fin_cpu = millis();
@@ -431,9 +488,9 @@ void loop()
   gb_cpunoexe=0;
   gb_volumen01= gb_frecuencia01=0;  //Silencio PWM Audio
   //Audio PWM ledcWriteTone(1,0);
-  #ifdef use_lib_audio_tone32
-   Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
-  #endif
+  //#ifdef use_lib_audio_tone32
+  // Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
+  //#endif
  }
 
  tiempo_cur_vga= millis();

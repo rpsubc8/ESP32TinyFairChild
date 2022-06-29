@@ -5,13 +5,20 @@
 #include "osd.h"
 //#include "dataFlash/gbcom.h"
 #include "hardware.h"
-#ifdef use_lib_audio_tone32
- #include "Tone32.h"
-#endif
+//#ifdef use_lib_audio_tone32
+// #include "Tone32.h"
+//#endif
 #include "PS2Kbd.h"
 #include "gb_sdl_font8x8.h"
 #include "video.h"
-#include "dataFlash/gbcart.h"
+#ifndef use_lib_wifi
+ #include "dataFlash/gbcart.h"
+#endif 
+#ifdef use_lib_wifi
+ #include "gbWifiConfig.h"
+ #include "gbWifi.h" 
+#endif
+
 //#include "render.h"
 //#include "dataFlash/gbsnarare.h"
 //#include "cpu.h"
@@ -75,15 +82,27 @@ unsigned char gb_show_osd_main_menu=0;
 
 
 #define max_gb_main_menu 7
-const char * gb_main_menu[max_gb_main_menu]={
- "Load CART",
- "Reset",
- "Delay CPU",
- "Video Poll",
- "Keyboard Poll",
- "Exit",
- "Return"
-};
+#ifdef use_lib_wifi
+ const char * gb_main_menu[max_gb_main_menu]={
+  "Load CART WIFI",
+  "Reset",
+  "Delay CPU",
+  "Video Poll",
+  "Keyboard Poll",
+  "Exit",
+  "Return"
+ };
+#else
+ const char * gb_main_menu[max_gb_main_menu]={
+  "Load CART",
+  "Reset",
+  "Delay CPU",
+  "Video Poll",
+  "Keyboard Poll",
+  "Exit",
+  "Return"
+ };
+#endif 
 
 //#define max_gb_machine_menu 3
 //const char * gb_machine_menu[max_gb_machine_menu]={
@@ -238,6 +257,95 @@ void OSDMenuRowsDisplayScroll(const char **ptrValue,unsigned char currentId,unsi
  }     
 }
 
+
+#ifdef use_lib_wifi
+ void ShowStatusWIFI(unsigned char aState)
+ {
+  if (aState == 1)
+  {
+   SDLprintText("WIFI LOAD",8,8,ID_COLOR_BLACK,ID_COLOR_WHITE);   
+  }
+  else
+  {  
+   SDLprintText("         ",8,8,ID_COLOR_BLACK,ID_COLOR_BLACK);
+  }
+ }
+
+
+ //**********************************************************************************
+ void OSDMenuRowsDisplayScrollFromWIFI(unsigned char *ptrBuffer,unsigned char currentId,unsigned char aMax)
+ {//Dibuja varias lineas 
+  char cadName8[10];
+  cadName8[8]='\0';
+  for (int i=0;i<gb_osd_max_rows;i++)
+  {
+   SDLprintText("                    ",gb_pos_x_menu,gb_pos_y_menu+8+(i<<3),ID_COLOR_BLACK,ID_COLOR_BLACK);
+  }
+ 
+  for (int i=0;i<gb_osd_max_rows;i++)
+  {
+   if (currentId >= aMax)
+    break;
+   memcpy(cadName8, &ptrBuffer[(currentId*8)], 8);
+   cadName8[8]='\0';
+//   SDLprintText(ptrValue[currentId],gb_pos_x_menu,gb_pos_y_menu+8+(i<<3),((i==0)?ID_COLOR_WHITE:ID_COLOR_WHITE),((i==0)?ID_COLOR_MAGENTA:ID_COLOR_BLACK));
+   //SDLprintText((const char*)cadName8,gb_pos_x_menu,gb_pos_y_menu+8+(i<<3),((i==0)?ID_COLOR_WHITE:ID_COLOR_WHITE),((i==0)?ID_COLOR_MAGENTA:ID_COLOR_BLACK));
+   SDLprintText((const char*)cadName8,gb_pos_x_menu,gb_pos_y_menu+8+(i<<3),((i==0)?ID_COLOR_WHITE:ID_COLOR_WHITE),((i==0)?ID_COLOR_VIOLETA:ID_COLOR_BLACK));
+   currentId++;
+  }     
+ }
+
+ //**********************************************************************************
+ unsigned char ShowTinyMenuFromWIFI(const char *cadTitle,unsigned char *ptrBuffer,unsigned char aMax)
+ {
+  unsigned char aReturn=0;
+  unsigned char salir=0;
+
+  SDLClear();
+  SDLprintText("FreeChaF by Ackerman",gb_pos_x_menu-(4<<3),gb_pos_y_menu-16,ID_COLOR_WHITE,ID_COLOR_BLACK);
+  for (int i=0;i<14;i++)
+  {
+   SDLprintCharOSD(' ',gb_pos_x_menu+(i<<3),gb_pos_y_menu,ID_COLOR_BLACK,ID_COLOR_WHITE);   
+  }
+  SDLprintText(cadTitle,gb_pos_x_menu,gb_pos_y_menu,ID_COLOR_BLACK,ID_COLOR_WHITE);
+  OSDMenuRowsDisplayScrollFromWIFI(ptrBuffer,0,aMax); 
+  while (salir == 0)
+  {  
+   if (checkAndCleanKey(KEY_CURSOR_LEFT))
+   {
+    if (aReturn>10) aReturn-=10;
+    OSDMenuRowsDisplayScrollFromWIFI(ptrBuffer,aReturn,aMax);
+   }
+   if (checkAndCleanKey(KEY_CURSOR_RIGHT))
+   {
+    if (aReturn<(aMax-10)) aReturn+=10;
+    OSDMenuRowsDisplayScrollFromWIFI(ptrBuffer,aReturn,aMax);
+   }
+   if (checkAndCleanKey(KEY_CURSOR_UP))
+   {
+    if (aReturn>0) aReturn--;
+    OSDMenuRowsDisplayScrollFromWIFI(ptrBuffer,aReturn,aMax);
+   }
+   if (checkAndCleanKey(KEY_CURSOR_DOWN))
+   {
+    if (aReturn < (aMax-1)) aReturn++;
+    OSDMenuRowsDisplayScrollFromWIFI(ptrBuffer,aReturn,aMax);
+   } 
+   if (checkAndCleanKey(KEY_ENTER))
+   {
+    salir= 1;
+   }
+   if (checkAndCleanKey(KEY_ESC))
+   {
+    salir=1; aReturn= 255;
+   }
+  }
+  gb_show_osd_main_menu= 0;
+  return aReturn;
+ }
+#endif
+
+
 //Maximo 256 elementos
 unsigned char ShowTinyMenu(const char *cadTitle,const char **ptrValue,unsigned char aMax)
 {
@@ -246,8 +354,10 @@ unsigned char ShowTinyMenu(const char *cadTitle,const char **ptrValue,unsigned c
  SDLClear();
  SDLprintText("FreeChaF by Ackerman",gb_pos_x_menu-(4<<3),gb_pos_y_menu-16,ID_COLOR_WHITE,ID_COLOR_BLACK);
  //for (int i=0;i<20;i++) 
- for (int i=0;i<14;i++) 
+ for (int i=0;i<14;i++)
+ {
   SDLprintCharOSD(' ',gb_pos_x_menu+(i<<3),gb_pos_y_menu,ID_COLOR_BLACK,ID_COLOR_WHITE);
+ }
  SDLprintText(cadTitle,gb_pos_x_menu,gb_pos_y_menu,ID_COLOR_BLACK,ID_COLOR_WHITE);
 
  OSDMenuRowsDisplayScroll(ptrValue,0,aMax);
@@ -262,6 +372,17 @@ unsigned char ShowTinyMenu(const char *cadTitle,const char **ptrValue,unsigned c
     //switch(gb_osd_sdl_event->key.keysym.sym)
     {
      //case SDLK_UP:
+     if (checkAndCleanKey(KEY_CURSOR_LEFT))
+     {
+      if (aReturn>10) aReturn-=10;
+      OSDMenuRowsDisplayScroll(ptrValue,aReturn,aMax);
+     }
+     if (checkAndCleanKey(KEY_CURSOR_RIGHT))
+     {
+      if (aReturn<(aMax-10)) aReturn+=10;
+      OSDMenuRowsDisplayScroll(ptrValue,aReturn,aMax);
+     }
+
      if (checkAndCleanKey(KEY_CURSOR_UP))
      {
       //vga.setTextColor(WHITE,BLACK);
@@ -316,7 +437,69 @@ unsigned char ShowTinyMenu(const char *cadTitle,const char **ptrValue,unsigned c
 void ShowTinyCartMenu()
 {
  unsigned char aSelNum;     
- aSelNum = ShowTinyMenu("Cart",gb_list_cart_title,max_list_cart);
+ #ifdef use_lib_wifi
+  //unsigned char aSelType;
+  //unsigned char aSelNum;
+  unsigned char tope;
+  int leidos=0;
+  //char cadUrl[256];
+  if (Check_WIFI() == true)
+  {
+   //PreparaURL(cadUrl, "/outlist/cart", "", (char*)"cart", "txt");
+   PreparaURL(gb_cadUrl, "/outlist/cart", "", (char*)"cart", "txt");   
+   #ifdef use_lib_wifi_debug
+    //Serial.printf("URL:%s\n",cadUrl);    
+    Serial.printf("URL:%s\n",gb_cadUrl);    
+   #endif
+   ShowStatusWIFI(1);
+   //Asignar_URL_stream_WIFI(cadUrl);
+   Asignar_URL_stream_WIFI(gb_cadUrl);
+   Leer_url_stream_WIFI(&leidos);
+   ShowStatusWIFI(0);
+   #ifdef use_lib_wifi_debug
+    Serial.printf("Leidos:%d\n",leidos);
+   #endif
+   tope = gb_size_file_wifi>>3; //DIV 8
+   #ifdef use_lib_wifi_debug
+    Serial.printf("Tope:%d\n",tope);
+   #endif
+   if (tope<1){
+    return;
+   }
+   if (tope>127)
+   {
+    tope= 127;
+   }
+   aSelNum = ShowTinyMenuFromWIFI("Cart WIFI",gb_buffer_wifi,tope);
+   if (aSelNum == 255){
+    return;
+   }
+   char cadFile[10];
+   for (int i=0;i<8;i++)
+   {
+    cadFile[i]= gb_buffer_wifi[(aSelNum*8)+i];
+    if (cadFile[i] ==' '){
+     cadFile[i]='\0';
+    }
+   }
+   cadFile[8]='\0';
+   #ifdef use_lib_wifi_debug
+    Serial.printf("Select:%d\n",aSelNum);
+   #endif
+   //PreparaURL(cadUrl, "/outdat/cart/", "", cadFile,"bin");
+   PreparaURL(gb_cadUrl, "/outdat/cart", "", cadFile,"chf");
+   #ifdef use_lib_wifi_debug
+    //Serial.printf("URL:%s\n",cadUrl);    
+    Serial.printf("URL:%s\n",gb_cadUrl);    
+   #endif 
+   ShowStatusWIFI(1);   
+   //WIFI changeSna2FlashFromWIFI(cadUrl,1);
+   //strcpy(gb_cadUrl,cadUrl);
+   ShowStatusWIFI(0);
+  }
+ #else
+  aSelNum = ShowTinyMenu("Cart",gb_list_cart_title,max_list_cart);
+ #endif 
 
  //gb_cartfilename= (char *)gb_list_rom_title[aSelNum];
  gb_force_load_cart= 1;
@@ -570,9 +753,9 @@ void do_tinyOSD()
   auxFrec= gb_frecuencia01;
   gb_volumen01= gb_frecuencia01=0;
   //Audio PWM ledcWriteTone(1,0);
-  #ifdef use_lib_audio_tone32
-   Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
-  #endif
+  //#ifdef use_lib_audio_tone32
+  // Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
+  //#endif
 
   aSelNum = ShowTinyMenu("MAIN MENU",gb_main_menu,max_gb_main_menu);
   switch (aSelNum)
@@ -600,9 +783,9 @@ void do_tinyOSD()
   gb_volumen01= auxVol;
   gb_frecuencia01= auxFrec;  
   //Audio PWM ledcWriteTone(1,auxFrec);
-  #ifdef use_lib_audio_tone32
-   Tone32_tone(SPEAKER_PIN, gb_frecuencia01, 0, SPEAKER_CHANNEL);
-  #endif  
+  //#ifdef use_lib_audio_tone32
+  // Tone32_tone(SPEAKER_PIN, gb_frecuencia01, 0, SPEAKER_CHANNEL);
+  //#endif  
   
  }
 

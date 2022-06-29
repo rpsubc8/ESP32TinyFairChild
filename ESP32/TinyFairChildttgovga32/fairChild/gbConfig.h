@@ -1,11 +1,14 @@
 #ifndef _GB_CONFIG_H
  #define _GB_CONFIG_H
  
+ //WIFI para leer juegos.Consume RAM
+ //Hay que configurar el gbWifiConfig.h
+ //#define use_lib_wifi
 
  //Corrige teclados que no se inicializan(solucion dcrespo3D)
  //#define FIX_PERIBOARD_NOT_INITING
 
- //Audio usar libreria Tone32 (No usar)
+ //Audio usar libreria Tone32 (No se usa)
  //#define use_lib_audio_tone32
  //#define SPEAKER_CHANNEL 2
  #define use_lib_audio_ticker

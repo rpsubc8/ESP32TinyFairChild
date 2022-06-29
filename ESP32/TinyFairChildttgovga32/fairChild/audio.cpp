@@ -21,10 +21,10 @@
 #include <string.h>
 
 //JJ #include "sintable.h"
-#include "hardware.h"
-#ifdef use_lib_audio_tone32
- #include "Tone32.h"
-#endif
+//#include "hardware.h"
+//#ifdef use_lib_audio_tone32
+// #include "Tone32.h"
+//#endif
 
 
 //JJ short AUDIO_Buffer[735 * 2];
@@ -47,6 +47,7 @@ static inline void CalculaPulsosSonido(int frec)
  //int auxContOnda;
  if (frec!=0) gb_pulsos_onda= (SAMPLE_RATE/frec)>>1; 
  else gb_pulsos_onda=0;
+ gb_cont_my_callbackfunc=0;
  //unsigned char estadoOnda=0;
 }
 
@@ -79,10 +80,10 @@ void AUDIO_portReceive(unsigned char port, unsigned char val)
   }
   CalculaPulsosSonido(gb_frecuencia01);
 
-  #ifdef use_lib_audio_tone32
-   Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
-   Tone32_tone(SPEAKER_PIN, gb_frecuencia01, 0, SPEAKER_CHANNEL);
-  #endif
+  //#ifdef use_lib_audio_tone32
+  // Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
+  // Tone32_tone(SPEAKER_PIN, gb_frecuencia01, 0, SPEAKER_CHANNEL);
+  //#endif
   //tone(25,200);     
   //Audio PWM ledcWriteTone(1,gb_frecuencia01);
   //printf("PORTS_notify %d %d\n",port,(val>>6)&0x03);

@@ -43,7 +43,9 @@
 #include "dataFlash/bios/gbRoms131254.h"
 //#include "dataFlash/cart/gbCartDemo.h"
 //#include "dataFlash/cart/gbCartPacman.h"
-#include "dataFlash/gbcart.h"
+#ifndef use_lib_wifi
+ #include "dataFlash/gbcart.h"
+#endif 
 
 
 #define DefaultFPS 60
@@ -112,7 +114,11 @@ void retro_init(void)
  aux= CHANNELF_loadROM_mem(gb_rom_sl31254_bin,1024,0x400);
  Serial.printf("ROM1 %d\n",aux);
  //aux= CHANNELF_loadROM_mem(gb_cart_demo, 2048, 0x800);
- aux= CHANNELF_loadROM_mem(gb_list_cart_data[gb_id_cur_cart], gb_list_cart_size[gb_id_cur_cart], 0x800);
+ #ifdef use_lib_wifi
+  aux= CHANNELF_loadROM_mem_wifi(0x800);
+ #else
+  aux= CHANNELF_loadROM_mem(gb_list_cart_data[gb_id_cur_cart], gb_list_cart_size[gb_id_cur_cart], 0x800);
+ #endif 
  Serial.printf("CART %d\n",aux);
  Serial.printf("RAMStart 0x%04X\n", MEMORY_RAMStart);
  //fflush(stdout);

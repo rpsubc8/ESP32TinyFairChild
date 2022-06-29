@@ -22,6 +22,9 @@
 
 //int CHANNELF_loadROM(const char* path, int address);
 
+#ifdef use_lib_wifi
+ int CHANNELF_loadROM_mem_wifi(int address);
+#endif
 int CHANNELF_loadROM_mem(const unsigned char* data, int sz, int address);
 
 void CHANNELF_run(void);
