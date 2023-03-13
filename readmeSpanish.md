@@ -10,6 +10,7 @@ He realizado varias modificaciones:
  <li>Uso de un sólo core</li>
  <li>OSD de bajos recursos</li>
  <li>Creado proyecto compatible con Arduino IDE y Platform IO</li>
+ <li>Proyecto compatible con Web Editor y ArduinoDroid (6.3.1) con tool makeandroid.bat</li>
  <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en hardware.h)</li>
  <li>Se puede usar cualquier pin digital para el video (hardware.h)</li>
  <li>Ajuste de pantalla X e Y</li>
@@ -42,6 +43,7 @@ Se requiere:
   <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
   <li>Arduino IDE 1.8.11</li>
+  <li>ArduinoDroid (6.3.1)</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
 La imagen adjunta es de mi placa TTGO VGA32 v1.2 sin psram ni módulo de SD.
@@ -57,6 +59,21 @@ Debemos modificar el fichero <b>platformio.ini</b> la opción <b>upload_port</b>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewPlatformIO.gif'></center>
 Luego procederemos a compilar y subir a la placa. No se usa particiones, así que debemos subir todo el binario compilado.
 Está todo preparado para no tener que instalar ninguna librería.
+
+
+
+<br><br>
+<h1>ArduinoDroid</h1>
+Se debe ejecutar, sólo una vez, el script makeandroid.bat, que nos deja toda la estructura de datos del directorio dataFlash en el directorio raiz, así como reemplazando las archivos principales con llamadas de los .h sin usar el directorio de datos dataFlash.<br>
+Al finalizar, el propio script, termina borrando el directorio dataFlash.<br>
+El script utiliza el fart.exe (find and replace text).<br>
+Una vez, se haya ejecutado con éxito, se puede usar con el ArduinoDroid.
+
+
+<br><br>
+<h1>Arduino Web Editor</h1>
+Se debe ejecutar, sólo una vez, el script makeandroid.bat. Una vez finalizado, se sube a la nube como un proyecto cualquiera, ya sea comprimido en zip o por archivos.
+
 
 
 <br><br>
