@@ -238,6 +238,6 @@ void CHANNELF_reset(void)
 	MEMORY_reset();
 	F2102_reset();
 	F8_reset();
-	tone = 0; //AUDIO_reset();
+	gb_tone = 0; //AUDIO_reset();
 	PORTS_reset();
 }

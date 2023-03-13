@@ -66,7 +66,8 @@
 
  //extern SDL_Surface *screen;
  
- extern unsigned char tone;
+ //extern unsigned char tone;
+ extern unsigned char gb_tone;
  extern volatile int gb_frecuencia01;
  extern volatile int gb_dutty_ch01;
  extern volatile int gb_volumen01;

@@ -29,7 +29,8 @@
 
 //JJ short AUDIO_Buffer[735 * 2];
 
-unsigned char tone = 0; // current tone
+//unsigned char tone = 0; // current tone
+unsigned char gb_tone = 0; // current tone
 
 //JJ static const int samplesPerFrame = 735; // sampleRate / framesPerSecond
 
@@ -65,13 +66,13 @@ void AUDIO_portReceive(unsigned char port, unsigned char val)
 		
 		
 		val = (val&0xC0)>>6;
-		if(val!=tone)
+		if(val!=gb_tone)
 		{
-		 tone = val;
+		 gb_tone = val;
 		 //JJ amp = FULL_AMPLITUDE;// No lo necesito
 		 //JJ sampleInCycle=0;
 
-  switch (tone)
+  switch (gb_tone)
   {
    case 0: gb_volumen01= gb_frecuencia01=0; break;
    case 1: gb_frecuencia01=1000;gb_volumen01=1; break;
