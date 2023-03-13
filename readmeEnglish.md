@@ -10,6 +10,7 @@ I have made several modifications:
  <li>Use of a single core</li>
  <li>Low resource OSD</li>
  <li>Created project compatible with Arduino IDE and Platform IO</li>
+ <li>Web Editor and ArduinoDroid (6.3.1) compatible project with tool makeandroid.bat</li>
  <li>Any digital pin can be used for audio (SPEAKER_PIN in hardware.h).</li>
  <li>Any digital pin can be used for video (hardware.h).</li>
  <li>X and Y screen adjustment</li>
@@ -41,10 +42,24 @@ Required:
   <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
   <li>Arduino IDE 1.8.11</li>
+  <li>ArduinoDroid (6.3.1)</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
 The attached image is of my TTGO VGA32 v1.2 board without psram or SD module.
 <br>
+
+
+<br><br>
+<h1>ArduinoDroid</h1>
+You must run, just once, the script makeandroid.bat, which leaves the entire data structure of the dataFlash directory in the root directory, as well as replacing the main files with .h calls without using the dataFlash data directory.<br>
+At the end, the script itself ends up deleting the dataFlash directory.<br>
+The script uses fart.exe (find and replace text).<br>
+Once, it has been successfully executed, it can be used with the ArduinoDroid.
+
+
+<br><br>
+<h1>Arduino Web Editor</h1>
+The makeandroid.bat script must be run once only. Once finished, it is uploaded to the cloud as any other project, either compressed in zip or by files.
 
 
 <br><br>
