@@ -9,7 +9,7 @@ He realizado varias modificaciones:
  <li>No se usa PSRAM, funcionando en ESP32 de 520 KB de RAM (TTGO VGA32 v1.x)</li> 
  <li>Uso de un sólo core</li>
  <li>OSD de bajos recursos</li>
- <li>Proyecto compatible con ESP32 versión 1.1.0, 2.0.0 y 3.3.0 (framework IDF versión 5.5)</li>
+ <li>Proyecto compatible con ESP32 versión 1.0.0, 2.0.0 y 3.3.0 (framework IDF versión 5.5)</li>
  <li>Creado proyecto compatible con Arduino IDE y Platform IO</li>
  <li>Proyecto compatible con Web Editor y ArduinoDroid (6.3.1) con tool makeandroid.bat y makearduinodroidlinux.sh</li>
  <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en gbConfig.h)</li>
@@ -46,7 +46,7 @@ Se requiere:
  <ul>
   <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
-  <li>Arduino IDE 1.8.11</li>
+  <li>Arduino IDE 1.8.11 ESP32 versión 1.0.0, 2.0.0 y 3.3.0 con IDF versión 5.5</li>
   <li>ArduinoDroid (6.3.1)</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
@@ -68,15 +68,37 @@ Está todo preparado para no tener que instalar ninguna librería.
 
 <br><br>
 <h1>ArduinoDroid</h1>
-Se debe ejecutar, sólo una vez, el script makeandroid.bat, que nos deja toda la estructura de datos del directorio dataFlash en el directorio raiz, así como reemplazando las archivos principales con llamadas de los .h sin usar el directorio de datos dataFlash.<br>
-Al finalizar, el propio script, termina borrando el directorio dataFlash.<br>
-El script utiliza el fart.exe (find and replace text).<br>
-Una vez, se haya ejecutado con éxito, se puede usar con el ArduinoDroid.
-
+El ArduinoDroid nos permitirá compilar y subir al ESP32 el proyecto de <b>fairChild</b> desde un dispositivo Android de 64 bits, es decir, un móvil, una tablet o un android box, siempre y cuando, nuestro dispositivo esté soportado.<br>
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewWin.gif'></center>
+Si estamos en windows, se debe ejecutar, sólo una vez, el script <b>makearduinodroidwin.bat</b>, que nos deja toda la estructura de datos del directorio dataFlash, así como el resto de archivos, en el directorio desde el que se lanza el script.<br>
+Si estamos en un Android con <b>termux</b> o en Linux, debemos ejecutar el <b>makearduinodroidlinux.sh</b>.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewTermux.gif'></center>
+Básicamente, nos quedan todos los archivos en un único nivel, sin subdirectorios posibles.<br>
+El directorio 'notdelete' es interno del script y se utiliza para copiar el <b>gbCompileOpt.h</b>.<br>
+Al finalizar, el propio script, podemos abrir el <b>fairChild.ino</b>, y recompilar desde el ArduinoDroid, sin nada especial. El script posee una pausa al inicio, por si queremos parar el script desde fuera, así como una parada al final, para ver los resultados del proceso.<br>
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoDroid.gif'></center>
+Si nos damos cuenta, todo gira en torno al pragma <b>gb_use_lib_compile_arduinodroid</b> de la cabecera <b>gbCompileOpt.h</b>, que en modo normal se utiliza con paths de múltiples niveles y en ArduinoDroid con el script, en un sólo nivel.<br>
+Este script busca los archivos subiendo niveles hasta llegar al <b>ESP32TinyFairChild/fairChild</b>, así que se requiere que se baje el proyecto completo con toda la estructura:
+<pre>
+ TinyFairChildttgovga32
+  fairChild
+   dataFlash
+  include
+  lib
+  test
+ tools
+  arduinodroid
+   galaksija
+  cart2h
+</pre>
+El ArduinoDroid (6.3.1) con soporte para ESP32 sólo funciona con procesadores de 64 bits.
 
 <br><br>
 <h1>Arduino Web Editor</h1>
-Se debe ejecutar, sólo una vez, el script makeandroid.bat. Una vez finalizado, se sube a la nube como un proyecto cualquiera, ya sea comprimido en zip o por archivos.
+Se debe ejecutar, sólo una vez, el script makearduinodroidwin.bat. Una vez finalizado, se sube a la nube como un proyecto cualquiera, ya sea comprimido en zip o por archivos.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoWebEditor.gif'></center>
+Básicamente es lo mismo, dado que se intenta dejar todo en un único nivel de directorio. Se recomienda importar el proyecto comprimido en zip con una compresión normal, nada de máxima, dado que algunos editores web del cloud no soportan el zip al 100%.<br>
+Si se suben todos los archivos en un zip, no debe contener ningún directorio, por lo que no debería estar el directorio <b>notdelete</b>.
 
 
 
