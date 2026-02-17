@@ -1085,7 +1085,7 @@ void ShowTinyVideoModeMenu()
   case 3: gb_vga_videomode_cur= 3; is8colors=0; gb_ptrVideo_cur= VgaMode_vga_mode_320x200; usepllcteforce=1; p0=0x00AE; p1=0x00CF; p2=0x0004; p3=0x0005; usecustompll=0; break;
   case 4: gb_vga_videomode_cur= 4; is8colors=0; gb_ptrVideo_cur= VgaMode_vga_mode_320x200; usepllcteforce=0; usecustompll=1; break;
   case 5: gb_vga_videomode_cur= 5; is8colors=0; gb_ptrVideo_cur= VgaMode_vga_mode_200x150; usepllcteforce=0; usecustompll=0; break;  
-  case 6: gb_vga_videomode_cur= 7; is8colors=0; gb_ptrVideo_cur= VgaMode_vga_mode_200x150; usepllcteforce=0; usecustompll=1; break;
+  case 6: gb_vga_videomode_cur= 6; is8colors=0; gb_ptrVideo_cur= VgaMode_vga_mode_200x150; usepllcteforce=0; usecustompll=1; break;
   
   default: break;
  } 
