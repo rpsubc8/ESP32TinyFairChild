@@ -140,8 +140,8 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
 
 
 <br><br>
-<h1>Tool chf2h</h1>
-He creado una herramienta muy básica, para convertir los archivos .chf en .h en modo lista para ser procesados por el emulador. Tan sólo tenemos que dejar los archivos .chf en la carpeta <b>input/cart</b> y ejecutar el archivo <b>chf2h.exe</b>, de forma que se generará una salida en el directorio <b>output/dataFlash</b>. Para pruebas, se ha dejado un archivo en el directorio <b>input/cart</b>, que se recomienda borrar en caso de realizar una nueva lista personalizada. También se recomienda borrar los archivos del directorio <b>fairChild/dataFlash/gbcart.h</b> y <b>fairChild/dataFlash/cart</b> para tener un proyecto limpio.<br><br>
+<h1>Tool cart2h</h1>
+He creado una herramienta muy básica, para convertir los archivos .chf en .h en modo lista para ser procesados por el emulador. Tan sólo tenemos que dejar los archivos .chf en la carpeta <b>input/cart</b> y ejecutar el archivo <b>cart2h.exe</b>, de forma que se generará una salida en el directorio <b>output/dataFlash</b>. Para pruebas, se ha dejado un archivo en el directorio <b>input/cart</b>, que se recomienda borrar en caso de realizar una nueva lista personalizada. También se recomienda borrar los archivos del directorio <b>fairChild/dataFlash/gbcart.h</b> y <b>fairChild/dataFlash/cart</b> para tener un proyecto limpio.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
 <br><br>
 <pre>
@@ -168,6 +168,7 @@ https://rpsubc8.github.io/ESP32TinyFairChild/www/fairchild/output
 </pre>
 
  Para activar este modo, se debe descomentar la línea <b>use_lib_wifi</b> en el <b>gbConfig.h</b><br>
+ Si se activa la compilación para WIFI, se forzará el uso del modo de video 200x150, por los requerimientos de RAM en modo https. El modo 320x200 con WIFI me ha funcionado, pero el 360x200 me quedaba en ocasiones sin RAM en las peticiones.
  Debemos configurar en el archivo <b>gbWIFIConfig.h</b> los datos:
  <pre>
   #define gb_wifi_ssd "nombreDeNuestraRedWIFIdelRooter"
