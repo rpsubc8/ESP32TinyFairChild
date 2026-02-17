@@ -29,6 +29,21 @@ He realizado varias modificaciones:
 
 
 <br><br>
+<h1>Modos de video</h1>
+Existen 7 posibles modos de video, que en realidad se dividen en 3 básicos, de 6 bpp (64 colores):
+<ul>
+ <li>360x200</li>
+ <li>320x200</li>
+ <li>200x150</li>
+</ul>
+Por defecto se arranca en 360x200.<br>
+Los modos de video se pueden seleccionar durante el arranque (500 ms) o reinicio, pudiendo especificar otro tiempo en el <b>gbConfig.h</b> en la sección <b>use_lib_boot_time_select_vga</b>, con sólo pulsar la tecla del mismo, desde el '0' al '6'.<br>
+El modo de video de inicio también se puede fijar en la compilación, pero lo más cómodo es cambiarlo en caliente desde el OSD en cualquier instante.<br>
+Así mismo, existen para cada modo de video, la posibilidad de poder usar la función del ajuste del pll de Espressif, o bien una custom, que evita que se quede colgado el ESP32. Dicho modo especial de video tiene el añadido del <b>apll</b>.<br>
+También se permiten diferentes ajustes de video, con modos de fabgl o bitluni.
+
+
+<br><br>
 <h1>Versión precompilada</h1>
 En la carpeta precompile se encuentra una versión ya compilada para poder ser grabada con el flash download tool 3.9.2. Se trata de una versión con resolución 360x200 con los juegos de demostración en FLASH.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile'>https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile</a>
