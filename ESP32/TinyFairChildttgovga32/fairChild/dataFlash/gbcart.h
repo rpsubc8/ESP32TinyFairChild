@@ -1,14 +1,26 @@
 #ifndef _GB_CART_H
  #define _GB_CART_H
 
- #include <stddef.h>
- #include "cart/gbCartPacman.h"
- #include "cart/gbCartDemo.h" 
- #include "cart/gbCartCctro.h"
- #include "cart/gbCartInvasion.h" 
- #include "cart/gbCartTetris.h"
- #include "cart/gbCartGalacticSpaceWars.h"
- #include "cart/gbCartPinball.h"
+ #include "gbCompileDataOpt.h"
+
+ //#include <stddef.h>
+ #ifdef gb_use_lib_compile_arduinodroid
+  #include "gbCartPacman.h"
+  #include "gbCartDemo.h"
+  #include "gbCartCctro.h"
+  #include "gbCartInvasion.h"
+  #include "gbCartTetris.h"
+  #include "gbCartGalacticSpaceWars.h"
+  #include "gbCartPinball.h"
+ #else
+  #include "cart/gbCartPacman.h"
+  #include "cart/gbCartDemo.h"
+  #include "cart/gbCartCctro.h"
+  #include "cart/gbCartInvasion.h"
+  #include "cart/gbCartTetris.h"
+  #include "cart/gbCartGalacticSpaceWars.h"
+  #include "cart/gbCartPinball.h"
+ #endif
  
  #define max_list_cart 7
  
