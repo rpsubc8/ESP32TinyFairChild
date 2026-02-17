@@ -1,8 +1,8 @@
 #ifndef _GB_WIFI_CONFIG_H
  #define _GB_WIFI_CONFIG_H
 
- #define gb_wifi_ssd "nombreDeNuestraRedWIFIdelRooter"
- #define gb_wifi_pass "passwordDeNuestraRedWIFIdelRooter"
+ #define gb_wifi_ssd ""
+ #define gb_wifi_pass ""
 
  //#define gb_wifi_url_base_path "http://192.168.0.36/fairchild/output"
  //https requiere mucha RAM. Usar http

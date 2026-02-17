@@ -35,7 +35,7 @@
 void unsupported_hle_function(void)
 {
 	//Serial.printf(stderr, "Unsupported HLE function: 0x%x\n", PC0);
-	Serial.printf("Unsupported HLE function: 0x%x\n", PC0);
+	if (gb_use_debug==1) { Serial.printf("Unsupported HLE function: 0x%x\r\n", PC0); }
 //	char formatted[1024];
 //	struct retro_message msg;
 //	msg.msg    = formatted;

@@ -30,7 +30,7 @@
 #ifdef use_lib_wifi
  #include "gbWifiConfig.h"
  #include "gbWifi.h"
- #include "osd.h"
+ #include "osd.h" 
 #endif
 
 int CPU_Ticks_Debt = 0;
@@ -66,16 +66,16 @@ int CPU_Ticks_Debt = 0;
   if (strcmp(gb_cadUrl,"")==0)
   {
    #ifdef use_lib_wifi_debug
-    Serial.printf("cart name empty\n");
+    if (gb_use_debug==1) { Serial.printf("cart name empty\r\n"); }
    #endif   
    return 1;
   }
   
   #ifdef use_lib_wifi_debug
-   Serial.printf("load_cart_WIFI\n");
+   if (gb_use_debug==1) { Serial.printf("load_cart_WIFI\r\n"); }
   #endif
   #ifdef use_lib_wifi_debug
-   Serial.printf("Check WIFI\n");
+   if (gb_use_debug==1) { Serial.printf("Check WIFI\r\n"); }
   #endif
 
   ShowStatusWIFI(1);
@@ -89,7 +89,7 @@ int CPU_Ticks_Debt = 0;
   int leidos=0;
   #ifdef use_lib_wifi_debug
    //Serial.printf("URL:%s\n",cadUrl);
-   Serial.printf("URL:%s\n",gb_cadUrl);   
+   if (gb_use_debug==1) { Serial.printf("URL:%s\r\n",gb_cadUrl);  }
   #endif   
   //Asignar_URL_stream_WIFI(cadUrl);
   Asignar_URL_stream_WIFI(gb_cadUrl);
@@ -102,11 +102,11 @@ int CPU_Ticks_Debt = 0;
   }
 
   #ifdef use_lib_wifi_debug
-   Serial.printf("Size cart:%d\n",gb_size_file_wifi);
+   if (gb_use_debug==1) { Serial.printf("Size cart:%d\r\n",gb_size_file_wifi); }
   #endif
   Leer_url_stream_WIFI(&leidos);
   #ifdef use_lib_wifi_debug
-   Serial.printf("Leidos:%d\n",leidos); //Leemos 1024 bytes
+   if (gb_use_debug==1) { Serial.printf("Leidos:%d\r\n",leidos); } //Leemos 1024 bytes
   #endif
 
   //He leido 1024 bytes. Lee resto
@@ -117,7 +117,7 @@ int CPU_Ticks_Debt = 0;
    if (contBuffer>= length)
    {
     #ifdef use_lib_wifi_debug
-     Serial.printf("Limit exced 0x10000\n");
+     if (gb_use_debug==1) { Serial.printf("Limit exced 0x10000\r\n"); }
     #endif            
     break;
    }
@@ -130,7 +130,7 @@ int CPU_Ticks_Debt = 0;
    {
     Leer_url_stream_WIFI(&leidos);
     #ifdef use_lib_wifi_debug
-     Serial.printf("Leidos:%d\n",leidos);
+     if (gb_use_debug==1) { Serial.printf("Leidos:%d\r\n",leidos); }
     #endif 
     cont1024= 0;
    }
@@ -180,23 +180,25 @@ void CHANNELF_run(void) // run for one frame
 	unsigned int cpu_before,cpu_cur;
 	int microsMedido,microsExacto;
 	int microsEspera;
+  unsigned int auxDurFramePALNTSC= ((gb_use_mode_pal==1)?20000:16666);
 
-    if (gb_auto_delay_cpu==1)
+  if (gb_auto_delay_cpu==1)
 	{//14914 ticks en 20 milis
 	 cpu_before= cpu_cur= micros();
 	 while(ticks<TICKS_PER_FRAME)
 	 {	  
-  	  tick = F8_exec(); //El que ejecuta el emulador      
+  	tick = F8_exec(); //El que ejecuta el emulador
 	  ticks+=tick;
 
 	  if ((contCPU & 0x03) == 0)
 	  {//Cada 4 iteraciones 00000011
 	   cpu_cur= micros();
 	   microsMedido= (cpu_cur-cpu_before);
-	   microsExacto= ((ticks * 20000)/TICKS_PER_FRAME);
+	   microsExacto= ((ticks * auxDurFramePALNTSC)/TICKS_PER_FRAME); //microsExacto= ((ticks * 20000)/TICKS_PER_FRAME);         
 	   //180 micros y mido 30  180-30=60
 	   microsEspera= (microsExacto-microsMedido);
-	   if ((microsEspera>0)&&(microsEspera<=20000))
+	   //if ((microsEspera>0)&&(microsEspera<=20000))
+     if ((microsEspera>0)&&(microsEspera<=auxDurFramePALNTSC))
 	   {
 	    delayMicroseconds(microsEspera);
 	   }
@@ -208,9 +210,9 @@ void CHANNELF_run(void) // run for one frame
 	{
 	 while(ticks<TICKS_PER_FRAME)
 	 {
-  	  tick = F8_exec(); //El que ejecuta el emulador
+  	tick = F8_exec(); //El que ejecuta el emulador
 	  ticks+=tick;		
-	  if ((contCPU & 0x03) == 0)
+	  if (((contCPU & 0x03) == 0) && (gb_delay_tick_cpu_micros!=0))
 	  {//Cada 4 iteraciones 00000011
 	   delayMicroseconds(gb_delay_tick_cpu_micros);	  
 	  }

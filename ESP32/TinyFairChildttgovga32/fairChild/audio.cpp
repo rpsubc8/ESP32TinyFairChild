@@ -42,44 +42,79 @@ unsigned char gb_tone = 0; // current tone
 //JJ short ticks = 0; // unprocessed ticks in 1/100 of tick
 //JJ int sample = 0; // current sample buffer position
 
-static inline void CalculaPulsosSonido(int frec)
-{ 
- //freq= (gb_volumen01==0)?0:gb_frecuencia01;
- //int auxContOnda;
- if (frec!=0) gb_pulsos_onda= (SAMPLE_RATE/frec)>>1; 
- else gb_pulsos_onda=0;
- gb_cont_my_callbackfunc=0;
- //unsigned char estadoOnda=0;
-}
+//static inline void CalculaPulsosSonido(int frec)
+//{ 
+// unsigned int auxPulsos;
+// //freq= (gb_volumen01==0)?0:gb_frecuencia01;
+// //int auxContOnda; 
+// if (frec!=0) 
+// {   
+//  auxPulsos= (SAMPLE_RATE/frec)>>1;
+//  gb_volumen01= (auxPulsos==0)?0:1;
+//  gb_pulsos_onda= auxPulsos;
+// }
+// else 
+// {
+//  gb_volumen01=0;
+//  gb_pulsos_onda=0;
+// } 
+// //gb_cont_my_callbackfunc=0;
+// //unsigned char estadoOnda=0;
+//}
 
 
 //JJ void AUDIO_portReceive(int port, unsigned char val)
+const unsigned short int arraySnd[4]={0,1000,500,120};
 void AUDIO_portReceive(unsigned char port, unsigned char val)
-{
-	if(port==5)
-	{
-		// Set Tone, bits 6 & 7: 
-		// 0 - Silence
-		// 1 - 1000hz
-		// 2 - 500hz
-		// 3 - 120hz
-		
-		
-		val = (val&0xC0)>>6;
-		if(val!=gb_tone)
-		{
-		 gb_tone = val;
-		 //JJ amp = FULL_AMPLITUDE;// No lo necesito
-		 //JJ sampleInCycle=0;
+{ 
+ unsigned int auxPulsos;
 
-  switch (gb_tone)
+ if(port==5)
+ {
+  // Set Tone, bits 6 & 7: 
+  // 0 - Silence
+  // 1 - 1000hz
+  // 2 - 500hz
+  // 3 - 120hz
+				
+  val = (val&0xC0)>>6;
+  if(val!=gb_tone)
   {
-   case 0: gb_volumen01= gb_frecuencia01=0; break;
-   case 1: gb_frecuencia01=1000;gb_volumen01=1; break;
-   case 2: gb_frecuencia01=500; gb_volumen01=1;break;                  
-   case 3: gb_frecuencia01=120;gb_volumen01=1; break;         
-  }
-  CalculaPulsosSonido(gb_frecuencia01);
+   gb_tone = val;
+   //JJ amp = FULL_AMPLITUDE;// No lo necesito
+   //JJ sampleInCycle=0;
+
+   //switch (gb_tone)
+   //{
+   // case 0: gb_volumen01= gb_frecuencia01=0; break;
+   // case 1: gb_frecuencia01=1000;gb_volumen01=1; break;
+   // case 2: gb_frecuencia01=500; gb_volumen01=1;break;                  
+   // case 3: gb_frecuencia01=120;gb_volumen01=1; break;         
+   //}
+   gb_frecuencia01= arraySnd[(gb_tone & 0x03)];
+   //CalculaPulsosSonido(gb_frecuencia01);
+   if (gb_frecuencia01!=0) 
+   {   
+    auxPulsos= (SAMPLE_RATE/gb_frecuencia01)>>1;
+	if (auxPulsos==0)
+	{
+	 gb_volumen01= 0;
+	 gb_pulsos_onda= auxPulsos;
+	}
+	else
+	{
+     gb_pulsos_onda= auxPulsos;
+     gb_volumen01= 1;
+	}    
+   }
+   else 
+   {
+    gb_volumen01=0;
+    gb_pulsos_onda=0;
+   }    
+
+   //microsExacto= ((ticks * auxDurFramePALNTSC)/TICKS_PER_FRAME); //microsExacto= ((ticks * 20000)/TICKS_PER_FRAME);
+   //gb_microsExacto_audio= microsExacto;
 
   //#ifdef use_lib_audio_tone32
   // Tone32_noTone(SPEAKER_PIN, SPEAKER_CHANNEL);
@@ -108,8 +143,8 @@ void AUDIO_portReceive(unsigned char port, unsigned char val)
    		 //printf("Vol:%d Freq:%d Tone:%d\n",gb_volumen01,gb_frecuencia01,tone);
 		 //fflush(stdout);
         			
-		}
-	}
+  }
+ }
 }
 
 /*void AUDIO_tick(int dt) // dt = ticks elapsed since last call

@@ -73,20 +73,13 @@
  extern volatile int gb_volumen01;
  extern volatile int gb_duracion01;
 
- //#define SAMPLE_RATE 16000 
- //Frecuencia correcta 1500
- #define SAMPLE_RATE 1500
- //#define SAMPLE_RATE 3000
- //#define SAMPLE_RATE 12000 
- //#define SAMPLE_RATE 1000
- //#define SAMPLE_RATE 500
  
  extern volatile unsigned int gb_pulsos_onda;
- extern volatile unsigned int gb_cont_my_callbackfunc; 
+ //extern volatile unsigned int gb_cont_my_callbackfunc; 
  extern volatile unsigned char speaker_pin_estado;
 
- extern volatile unsigned char keymap[256];
- extern volatile unsigned char oldKeymap[256];
+ //extern volatile unsigned char keymap[256];
+ //extern volatile unsigned char oldKeymap[256];
 
 
  extern unsigned char gb_show_osd_main_menu;
@@ -106,6 +99,27 @@
 
  extern unsigned char gb_keyboard_cur_poll_ms;
  extern unsigned char gb_vga_cur_poll_ms;
+
+ extern unsigned char gb_use_debug;
+ extern unsigned char gb_vga_videomode_cur_menu; //El seleccionado en el OSD
+ extern unsigned char gb_vga_videomode_cur;
+ extern unsigned short int gb_vga_ancho;
+ extern unsigned short int gb_vga_alto; 
+ extern const unsigned int *gb_ptrVideo_cur;
+ extern unsigned char gb_vga_8colors; //1 8 colores, 0 64 colores
+ extern const unsigned char pin_config[];
+ extern unsigned char gb_pos_x_menu;
+ extern unsigned char gb_pos_y_menu;
+ extern unsigned char gb_add_offset_x;
+ extern unsigned char gb_add_offset_y;
+ extern unsigned char gb_offset_video32_x; //x offset 32 bits 4 pixels
+
+ extern unsigned char gb_do_action_key_show_osd;
+ extern unsigned char gb_use_mode_pal; //PAL o NTSC
+ extern unsigned char gb_use_cpu_delay;
+ extern unsigned char gb_color_vga[8];
+ extern unsigned char gb_fps_cur;
+ extern unsigned char gb_fps_cur_videotask_dump;
 
 #endif
 

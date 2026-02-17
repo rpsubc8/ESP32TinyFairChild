@@ -38,13 +38,24 @@
 #include "f2102.h"
 #include "channelf_hle.h"
 
-#include "dataFlash/bios/gbRoms131253.h"
-#include "dataFlash/bios/gbRomsl90025.h"
-#include "dataFlash/bios/gbRoms131254.h"
+#include "gbCompileOpt.h"
+#ifdef gb_use_lib_compile_arduinodroid
+ #include "gbRoms131253.h"
+ #include "gbRomsl90025.h"
+ #include "gbRoms131254.h"
+#else
+ #include "dataFlash/bios/gbRoms131253.h"
+ #include "dataFlash/bios/gbRomsl90025.h"
+ #include "dataFlash/bios/gbRoms131254.h"
+#endif 
 //#include "dataFlash/cart/gbCartDemo.h"
 //#include "dataFlash/cart/gbCartPacman.h"
 #ifndef use_lib_wifi
- #include "dataFlash/gbcart.h"
+ #ifdef gb_use_lib_compile_arduinodroid
+  #include "gbcart.h"
+ #else
+  #include "dataFlash/gbcart.h"
+ #endif 
 #endif 
 
 
@@ -110,17 +121,17 @@ void retro_init(void)
  
  //Funciona BEGIN memoria
  unsigned char aux= CHANNELF_loadROM_mem(gb_rom_sl31253_bin, 1024, 0);
- Serial.printf("ROM0 %d\n",aux);
+ if (gb_use_debug==1) { Serial.printf("ROM0 %d\r\n",aux); }
  aux= CHANNELF_loadROM_mem(gb_rom_sl31254_bin,1024,0x400);
- Serial.printf("ROM1 %d\n",aux);
+ if (gb_use_debug==1) { Serial.printf("ROM1 %d\r\n",aux); }
  //aux= CHANNELF_loadROM_mem(gb_cart_demo, 2048, 0x800);
  #ifdef use_lib_wifi
   aux= CHANNELF_loadROM_mem_wifi(0x800);
  #else
   aux= CHANNELF_loadROM_mem(gb_list_cart_data[gb_id_cur_cart], gb_list_cart_size[gb_id_cur_cart], 0x800);
  #endif 
- Serial.printf("CART %d\n",aux);
- Serial.printf("RAMStart 0x%04X\n", MEMORY_RAMStart);
+ if (gb_use_debug==1) { Serial.printf("CART %d\r\n",aux); }
+ if (gb_use_debug==1) { Serial.printf("RAMStart 0x%04X\r\n", MEMORY_RAMStart); }
  //fflush(stdout);
  //Funciona END memoria
   

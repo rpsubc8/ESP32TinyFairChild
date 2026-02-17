@@ -87,6 +87,33 @@
 #endif
 
 #include "vga_6bit.h"
+#include "driver/i2c.h" // i2c_rtc_clk.h"
+
+//BEGIN PLL
+//#include <esp_heap_caps.h>
+//#include <soc/rtc.h>
+//#include <soc/i2s_reg.h>
+//#include <soc/i2s_struct.h>
+//#include <soc/io_mux_reg.h>
+//#include <driver/rtc_io.h>
+//#include <driver/gpio.h>
+//#include <driver/periph_ctrl.h>
+#include "regi2c_ctrl.h"
+//END PLL
+
+
+
+unsigned char pll_cte_force=0; //Forzar el uso de PLL constante
+unsigned char pll_custom_force=0; //Forzar uso de custom_rtc_clk_apll_enable
+unsigned int pll_cte_p0;
+unsigned int pll_cte_p1;
+unsigned int pll_cte_p2;
+unsigned int pll_cte_p3;
+unsigned char vga_is8colors=1;
+//unsigned char vga_pinmap[8];
+const unsigned char * vga_pinmap;
+unsigned char vga_video_mode_id_cur;
+
 
 
 //Conversion a C
@@ -102,6 +129,101 @@ int v_div;
 int pixel_clock;
 unsigned char h_polarity;
 unsigned char v_polarity;
+
+#ifdef use_lib_esp_arduino_compile_ver_3_3_0
+ //rtc_cntl_reg.h
+ //soc.h
+ #ifndef RTC_CNTL_SOC_CLK_SEL_PLL
+  #define RTC_CNTL_SOC_CLK_SEL_PLL 1
+ #endif
+ #ifndef RTC_CNTL_SOC_CLK_SEL
+  #define RTC_CNTL_SOC_CLK_SEL 0x00000003
+ #endif
+ #ifndef DR_REG_RTCCNTL_BASE 
+  #define DR_REG_RTCCNTL_BASE 0x3ff48000
+ #endif
+ #ifndef RTC_CNTL_CLK_CONF_REG
+  #define RTC_CNTL_CLK_CONF_REG (DR_REG_RTCCNTL_BASE + 0x70)
+ #endif 
+#else
+ //use_lib_esp_arduino_compile_ver_1_0_0
+#endif 
+
+ #define APLL_SDM_STOP_VAL_2_REV1 0x49
+ #define APLL_SDM_STOP_VAL_2_REV0 0x69
+ #define APLL_SDM_STOP_VAL_1 0x09
+ #define APLL_CAL_DELAY_1 0x0f
+ #define APLL_CAL_DELAY_2 0x3f
+ #define APLL_CAL_DELAY_3 0x1f
+ #define EFUSE_BLK0_RDATA3_REG (DR_REG_EFUSE_BASE + 0x00c)
+ #define I2C_APLL 0X6D
+ #define I2C_APLL_DSDM2 7
+ #define I2C_APLL_DSDM0 9
+ #define I2C_APLL_DSDM1 8
+ #define I2C_APLL_SDM_STOP 5
+ #define I2C_APLL_OR_OUTPUT_DIV 4
+ #define I2C_APLL_IR_CAL_DELAY 0
+ #define I2C_APLL_OR_CAL_END 3
+
+ #define I2C_WRITEREG_MASK_RTC(block, reg_add, indata) \
+      rom_i2c_writeReg_Mask(block, block##_HOSTID,  reg_add,  reg_add##_MSB,  reg_add##_LSB,  indata)
+
+ #define I2C_READREG_MASK_RTC(block, reg_add) \
+      rom_i2c_readReg_Mask(block, block##_HOSTID,  reg_add,  reg_add##_MSB,  reg_add##_LSB)
+
+ #define I2C_WRITEREG_RTC(block, reg_add, indata) \
+      rom_i2c_writeReg(block, block##_HOSTID,  reg_add, indata)
+
+ void custom_rtc_clk_apll_enable(bool enable, uint32_t sdm0, uint32_t sdm1, uint32_t sdm2, uint32_t o_div)
+ {  
+  REG_SET_FIELD(RTC_CNTL_ANA_CONF_REG, RTC_CNTL_PLLA_FORCE_PD, enable ? 0 : 1);
+  REG_SET_FIELD(RTC_CNTL_ANA_CONF_REG, RTC_CNTL_PLLA_FORCE_PU, enable ? 1 : 0);
+ 
+  if (!enable && REG_GET_FIELD(RTC_CNTL_CLK_CONF_REG, RTC_CNTL_SOC_CLK_SEL) != RTC_CNTL_SOC_CLK_SEL_PLL)
+  {
+   REG_SET_BIT(RTC_CNTL_OPTIONS0_REG, RTC_CNTL_BIAS_I2C_FORCE_PD);
+  }
+  else
+  {
+   REG_CLR_BIT(RTC_CNTL_OPTIONS0_REG, RTC_CNTL_BIAS_I2C_FORCE_PD);
+  }  
+ 
+  if (enable)
+  {
+   uint8_t sdm_stop_val_2 = APLL_SDM_STOP_VAL_2_REV1;
+   uint32_t is_rev0 = (GET_PERI_REG_BITS2(EFUSE_BLK0_RDATA3_REG, 1, 15) == 0);
+   if (is_rev0) 
+   {
+    sdm0 = 0;
+    sdm1 = 0;
+    sdm_stop_val_2 = APLL_SDM_STOP_VAL_2_REV0;
+   }
+   
+   I2C_WRITEREG_MASK_RTC(I2C_APLL, I2C_APLL_DSDM2, sdm2);
+   I2C_WRITEREG_MASK_RTC(I2C_APLL, I2C_APLL_DSDM0, sdm0);
+   I2C_WRITEREG_MASK_RTC(I2C_APLL, I2C_APLL_DSDM1, sdm1);
+   I2C_WRITEREG_RTC(I2C_APLL, I2C_APLL_SDM_STOP, APLL_SDM_STOP_VAL_1);
+   I2C_WRITEREG_RTC(I2C_APLL, I2C_APLL_SDM_STOP, sdm_stop_val_2);
+   I2C_WRITEREG_MASK_RTC(I2C_APLL, I2C_APLL_OR_OUTPUT_DIV, o_div);
+   
+   //Quito calibracion
+   ////calibration   
+   //I2C_WRITEREG_RTC(I2C_APLL, I2C_APLL_IR_CAL_DELAY, APLL_CAL_DELAY_1);
+   //I2C_WRITEREG_RTC(I2C_APLL, I2C_APLL_IR_CAL_DELAY, APLL_CAL_DELAY_2);
+   //I2C_WRITEREG_RTC(I2C_APLL, I2C_APLL_IR_CAL_DELAY, APLL_CAL_DELAY_3); 
+ 
+   ////wait for calibration end   
+   //while (!(I2C_READREG_MASK_RTC(I2C_APLL, I2C_APLL_OR_CAL_END)))
+   //{
+   // //use ets_delay_us so the RTC bus doesn't get flooded
+   // ets_delay_us(1);
+   //}      
+  }
+  //Serial.printf("Custom PLL call\r\n");
+ }
+
+
+
 
 void VgaMode_VgaMode(int hf, int hs, int hb, int hpix,
           int vf, int vs, int vb, int vpix,
@@ -155,6 +277,36 @@ static intr_handle_t i2s_isr_handle;        // I2S interrupt handler (triggered 
 static volatile int DRAM_ATTR vga_frame_count = 0;    // incremented by I2S interrupt handler
 
 //static const VgaMode *vga_mode;
+
+
+void FreeInterrupt()
+{
+ if (i2s_isr_handle!=0)
+ {
+  esp_intr_free(i2s_isr_handle);
+  i2s_isr_handle=0; //Deberia chequear return ESP_OK
+ } 
+}
+
+//****************************
+void SetVideoInterrupt(unsigned char auxState)
+{
+ if (auxState == 1)
+ {
+  if (i2s_isr_handle!=0)
+  {
+   esp_intr_enable(i2s_isr_handle);   
+  }
+ }
+ else
+ {
+  if (i2s_isr_handle!=0)
+  {
+   esp_intr_disable(i2s_isr_handle);   
+  }
+ } 
+}
+
 
 
 static void die()
@@ -291,14 +443,26 @@ static unsigned char **alloc_framebuffer()
 
 static void clear_framebuffer(unsigned char **fb, uint8_t color)
 {
-  unsigned int clear_byte = sync_bits() | (color & 0x3f);
+  //unsigned int clear_byte = sync_bits() | (color & 0x3f);
+  unsigned int clear_byte=0;
+  if (vga_is8colors==1)
+  {
+   clear_byte = sync_bits() | (color & 0x07);
+  }
+  else
+  {
+   clear_byte = sync_bits() | (color & 0x3f);
+  }
+
   unsigned int clear_data = ((clear_byte << 24) |
                              (clear_byte << 16) |
                              (clear_byte <<  8) |
                              (clear_byte <<  0));
   for (int y = 0; y < y_res(); y++) {
     unsigned int *line = (unsigned int *) fb[y];
-    for (int x = 0; x < x_res()/4; x++) {
+    //for (int x = 0; x < x_res()/4; x++) 
+    for (int x = 0; x < (h_pixels>>2); x++)
+    {
       line[x] = clear_data;
     }
   }
@@ -352,9 +516,19 @@ static void setup_i2s_output(const unsigned char *pin_map)
    unsigned char pin = pin_map[i];
    if (pin != 255)
    {
-    PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[pin], PIN_FUNC_GPIO);
+    #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+     esp_rom_gpio_pad_select_gpio(pin); //ESP3-3-0-IDF5-5          
+    #else
+     //use_lib_esp_arduino_compile_ver_1_0_0
+     PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[pin], PIN_FUNC_GPIO);
+    #endif
     gpio_set_direction((gpio_num_t) pin, (gpio_mode_t) GPIO_MODE_DEF_OUTPUT);
-    gpio_matrix_out(pin, I2S1O_DATA_OUT0_IDX + i, false, false);
+    #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+     esp_rom_gpio_connect_out_signal(pin, I2S1O_DATA_OUT0_IDX + i, false, false); //ESP3-3-0-IDF5-5
+    #else
+     //use_lib_esp_arduino_compile_ver_1_0_0
+     gpio_matrix_out(pin, I2S1O_DATA_OUT0_IDX + i, false, false);
+    #endif 
    }
   }
   periph_module_enable(PERIPH_I2S1_MODULE);
@@ -375,16 +549,227 @@ static void setup_i2s_output(const unsigned char *pin_map)
   I2S1.sample_rate_conf.tx_bits_mod = 8;
   
   // clock setup
-  long freq = pixel_clock * 2;
-  int sdm, sdmn;
-  int odir = -1;
-  do {	
-    odir++;
-    sdm  = long((double(freq) / (20000000. / (odir + 2    ))) * 0x10000) - 0x40000;
-    sdmn = long((double(freq) / (20000000. / (odir + 2 + 1))) * 0x10000) - 0x40000;
-  } while(sdm < 0x8c0ecL && odir < 31 && sdmn < 0xA1fff);
-  if (sdm > 0xA1fff) sdm = 0xA1fff;
-  rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+  // clock setup
+  #ifdef use_lib_fix_double_precision     
+   unsigned int p0, p1, p2, p3;
+   Serial.printf("use_lib_fix_double_precision\r\n");
+   switch (vga_video_mode_id_cur)
+   {
+    case video_mode_360x200x70hz_bitluni: case video_mode_360x200x70hz_bitluni_apll_fix:
+     p0= 0x00B1; p1= 0x00BE; p2= 0x0008; p3= 0x0007;     
+     break;
+
+    case video_mode_vga320x200x70hz_bitluni: case video_mode_vga320x200x70hz_bitluni_apll_fix:
+     p0= 0x00A3; p1= 0x00D8; p2= 0x0009; p3= 0x0009;
+     break;
+    
+    case video_mode_vga320x240x60hz_bitluni: case video_mode_vga320x240x60hz_bitluni_apll_fix:
+     p0= 0x00A3; p1= 0x00D8; p2= 0x0009; p3= 0x0009;    
+     break;
+
+    case video_mode_vga320x200x70hz_fabgl: 
+     p0= 0x00AE; p1= 0x00CF; p2= 0x0004; p3= 0x0005;
+     break;
+    
+    case video_mode_vga320x240x60hz_fabgl:
+     p0= 0x000A; p1= 0x0057; p2= 0x0007; p3= 0x0007;
+     break;
+
+    default: break;
+   }
+
+   /*
+   #ifdef use_lib_vga360x200x70hz_bitluni
+    //sdm:0x8BEB1 odir:0x0007
+    //(sdm & 0xff):0x00B1 (sdm >> 8):0x00BE (sdm >> 16):0x0008
+    unsigned int p0= 0x00B1;
+    unsigned int p1= 0x00BE;
+    unsigned int p2= 0x0008;
+    unsigned int p3= 0x0007;
+   #else
+    #ifdef use_lib_vga320x200x70hz_bitluni
+     //sdm:0x9D8A3 odir:0x0009
+     //(sdm & 0xff):0x00A3 (sdm >> 8):0x00D8 (sdm >> 16):0x0009    
+     unsigned int p0= 0x00A3;
+     unsigned int p1= 0x00D8;
+     unsigned int p2= 0x0009;
+     unsigned int p3= 0x0009;
+
+     //Datos fabgl 320x200 75 Hz freq:12930000 Da fuera de rango
+     //p0=0x000E;
+     //p1=0x000D;
+     //p2=0x0005;
+     //p3=0x0005;
+     //Datos fabgl 320x200 70Hz freq:12587500 funciona
+     //p0=0x00AE;
+     //p1=0x00CF;
+     //p2=0x0004;
+     //p3=0x0005;
+     //Datos fabgl 320x200@60HzD 60Hz freq:25175000 fuera de rango
+     //p0=0x00EB;
+     //p1=0x0011;
+     //p2=0x0006;
+     //p3=0x0002;
+    #else
+     #ifdef use_lib_vga320x240x60hz_bitluni
+      //sdm:0x9D8A3 odir:0x0009
+      //(sdm & 0xff):0x00A3 (sdm >> 8):0x00D8 (sdm >> 16):0x0009
+      unsigned int p0= 0x00A3;
+      unsigned int p1= 0x00D8;
+      unsigned int p2= 0x0009;
+      unsigned int p3= 0x0009;
+
+      //Datos fabgl QVGA 320x240@60Hz 60Hz freq:12600000 Funciona
+      //sdm0:000A sdm1:0057 sdm2:0007 o_div:0007
+      //p0=0x000A;
+      //p1=0x0057;
+      //p2=0x0007;
+      //p3=0x0007;
+     #else
+      #ifdef use_lib_vga320x200x70hz_fabgl
+       unsigned int p0= 0x00AE;
+       unsigned int p1= 0x00CF;
+       unsigned int p2= 0x0004;
+       unsigned int p3= 0x0005;          
+      #else
+       #ifdef use_lib_vga320x240x60hz_fabgl
+        unsigned int p0= 0x000A;
+        unsigned int p1= 0x0057;
+        unsigned int p2= 0x0007;
+        unsigned int p3= 0x0007;       
+       #endif
+      #endif
+     #endif
+    #endif
+   #endif
+   */
+
+   #ifdef use_lib_debug_i2s
+    Serial.printf("bitluni pixel_clock:%d\r\n",pixel_clock);
+    Serial.printf("bitluni p0:0x%04X p1:0x%04X p2:0x%04X p3:0x%04X \r\n",p0,p1,p2,p3);
+   #endif
+
+   if (pll_custom_force==0)
+   {
+    #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+     rtc_clk_apll_enable(true);
+     rtc_clk_apll_coeff_set(p3, p0, p1, p2);
+    #else
+     //use_lib_esp_arduino_compile_ver_1_0_0
+     rtc_clk_apll_enable(true, p0, p1, p2, p3);
+    #endif 
+   }
+   else
+   {
+    custom_rtc_clk_apll_enable(true, p0, p1, p2, p3);
+   }
+   //Hay que revisar el swgenerator.cpp - play - setupClock si se usa sonido
+   //Prepara rtc_clk_apll_enable con precision doble, pero no se usa
+  #else
+   long freq = pixel_clock * 2;
+   int sdm, sdmn;
+   int odir = -1;
+
+   if (pll_cte_force==0)
+   {   
+    do {	
+     odir++;
+     sdm  = long((double(freq) / (20000000. / (odir + 2    ))) * 0x10000) - 0x40000;
+     sdmn = long((double(freq) / (20000000. / (odir + 2 + 1))) * 0x10000) - 0x40000;
+    } while(sdm < 0x8c0ecL && odir < 31 && sdmn < 0xA1fff);
+    if (sdm > 0xA1fff) sdm = 0xA1fff;
+   
+
+    #ifdef use_lib_debug_i2s
+     Serial.printf("bitluni freq:%ld pixel_clock:%d\r\n",freq,pixel_clock);
+     Serial.printf("bitluni sdm:0x%04X odir:0x%04X\r\n",sdm,odir);
+     Serial.printf("bitluni (sdm & 0xff):0x%04X (sdm >> 8):0x%04X (sdm >> 16):0x%04X\r\n",sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16);
+    #endif
+    pll_cte_p0= (sdm & 0xff);
+    pll_cte_p1= ((sdm >> 8) & 0xff);
+    pll_cte_p2= (sdm >> 16);
+    pll_cte_p3= odir;
+    if (pll_custom_force==0)
+    {
+     #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+      rtc_clk_apll_enable(true);
+      rtc_clk_apll_coeff_set(odir, sdm & 0xFF, (sdm >> 8) & 0xFF, sdm >> 16);
+     #else
+      //use_lib_esp_arduino_compile_ver_1_0_0
+      rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+     #endif 
+    }
+    else
+    {
+     custom_rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+    }
+   } 
+   else   
+   {
+    Serial.printf("Force PLL cte calcule\r\n");
+    unsigned int p0= pll_cte_p0;
+    unsigned int p1= pll_cte_p1;
+    unsigned int p2= pll_cte_p2;
+    unsigned int p3= pll_cte_p3;
+    Serial.printf("bitluni p0:0x%04X p1:0x%04X p2:0x%04X p3:0x%04X \r\n",p0,p1,p2,p3);
+    if (pll_custom_force==0)
+    {
+     #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+      rtc_clk_apll_enable(true);
+      rtc_clk_apll_coeff_set(p3, p0, p1, p2); //rtc_clk_apll_coeff_set(p0, p1, p2, p3);
+     #else
+      //use_lib_esp_arduino_compile_ver_1_0_0
+      rtc_clk_apll_enable(true, p0, p1, p2, p3);
+     #endif 
+    }
+    else
+    {
+     custom_rtc_clk_apll_enable(true, p0, p1, p2, p3);
+    }
+   }
+  #endif
+
+   //320x200  720x400 31.4 Khz 70.0 Hz
+   //freq:25175000 pixel_clock:12587500
+   //sdm:0x9D8A3 odir:0x0009
+   //(sdm & 0xff):0x00A3 (sdm >> 8):0x00D8 (sdm >> 16):0x0009
+   //
+   //320x240  640x480 31.4 Khz 60 Hz
+   //freq:25175000 pixel_clock:12587500
+   //sdm:0x9D8A3 odir:0x0009
+   //(sdm & 0xff):0x00A3 (sdm >> 8):0x00D8 (sdm >> 16):0x0009   
+   //
+   //360x200 720x400 31.3 Khz 70.3 Hz
+   //freq:28322000 pixel_clock:14161000
+   //sdm:0x8BEB1 odir:0x0007
+   //(sdm & 0xff):0x00B1 (sdm >> 8):0x00BE (sdm >> 16):0x0008
+   
+  //rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+
+
+
+//  long freq = pixel_clock * 2;
+//  int sdm, sdmn;
+//  int odir = -1;
+//  do {	
+//    odir++;
+//    sdm  = long((double(freq) / (20000000. / (odir + 2    ))) * 0x10000) - 0x40000;
+//    sdmn = long((double(freq) / (20000000. / (odir + 2 + 1))) * 0x10000) - 0x40000;
+//  } while(sdm < 0x8c0ecL && odir < 31 && sdmn < 0xA1fff);
+//  if (sdm > 0xA1fff) sdm = 0xA1fff;
+//  //ESP-3-3-0-IDF-5-5 BEGIN
+//  //ESP-3-3-0-IDF-5-5    rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+//  //ESP-3-3-0-IDF-5-5 END
+//  #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+//   rtc_clk_apll_coeff_set(odir, sdm & 0xFF, (sdm >> 8) & 0xFF, sdm >> 16);
+//   rtc_clk_apll_enable(true);
+//  #else
+//   //use_lib_esp_arduino_compile_ver_1_0_0
+//   rtc_clk_apll_enable(true, sdm & 0xff, (sdm >> 8) & 0xff, sdm >> 16, odir);
+//  #endif
+
+
+  
 
   I2S1.clkm_conf.val = 0;
   I2S1.clkm_conf.clka_en = 1;
@@ -467,19 +852,49 @@ static void start_i2s_output()
 //   [7] V-sync
 //JJ void vga_init(const int *pin_map, const VgaMode &mode, bool double_buffered)
 //void vga_init(const unsigned char *pin_map, const VgaMode &mode, bool double_buffered)
-void vga_init(const unsigned char *pin_map, const int *mode, bool double_buffered)
+//void vga_init(const unsigned char *pin_map, const int *mode, bool double_buffered)
+void vga_init(const unsigned char *pin_map, const unsigned int *mode, bool double_buffered,unsigned char pllcteforce, unsigned int p0,unsigned int p1,unsigned int p2,unsigned int p3,unsigned char pllcustomforce,unsigned char is8colors, unsigned char vgaVideoModeid)
 {
   //vga_mode = &mode;
   
+  vga_is8colors= is8colors;
+  vga_video_mode_id_cur= vgaVideoModeid;
+
+  Serial.printf("Id video:");
+  switch (vga_video_mode_id_cur)
+  {
+   case video_mode_360x200x70hz_bitluni: Serial.printf("360x200x70hz_bitluni\r\n"); break;
+   case video_mode_360x200x70hz_bitluni_apll_fix: Serial.printf("360x200x70hz_bitluni_apll_fix\r\n"); break;
+   case video_mode_vga320x200x70hz_bitluni: Serial.printf("vga320x200x70hz_bitluni\r\n"); break;
+   case video_mode_vga320x200x70hz_fabgl: Serial.printf("vga320x200x70hz_fabgl\r\n"); break;
+   case video_mode_vga320x200x70hz_bitluni_apll_fix: Serial.printf("vga320x200x70hz_bitluni_apll_fix\r\n"); break;
+   case video_mode_vga200x150x70hz_bitluni: Serial.printf("vga200x150x70hz_bitluni\r\n"); break;   
+   case video_mode_vga200x150x70hz_bitluni_apll_fix: Serial.printf("vga200x150x70hz_bitluni_apll_fix\r\n"); break;
+   default: break;
+  }  
+
+  vga_pinmap= pin_map;
+
   VgaMode_VgaMode(mode[0],mode[1],mode[2],mode[3],mode[4],mode[5],mode[6],mode[7],mode[8],mode[9],mode[10],mode[11]);
+  pll_cte_force= pllcteforce; //force not calculate PLL
+  pll_custom_force= pllcustomforce; //fuerza uso de custom pll call function
+  pll_cte_p0= p0;
+  pll_cte_p1= p1;
+  pll_cte_p2= p2;
+  pll_cte_p3= p3;  
 
   num_framebuffers = (double_buffered) ? 2 : 1;
   for (int i = 0; i < num_framebuffers; i++) {
     framebuffer[i] = alloc_framebuffer();
   }
   active_framebuffer = 0;
-  back_framebuffer = (active_framebuffer+1) % num_framebuffers;
+  back_framebuffer = (active_framebuffer+1) % num_framebuffers;  
   clear_framebuffer(framebuffer[active_framebuffer], 0);
+  {//Solo tengo un buffer
+  if (num_framebuffers>1)
+   clear_framebuffer(framebuffer[back_framebuffer], 0);
+  }
+  
   clear_framebuffer(framebuffer[back_framebuffer], 0);
 
   allocate_vga_i2s_buffers();
@@ -561,6 +976,108 @@ unsigned char **vga_get_framebuffer()
 {
   return framebuffer[back_framebuffer];
 }
+
+
+
+
+
+
+
+
+int vga_get_y_res()
+{
+ return v_pixels / v_div;
+} 
+
+void vga_free(unsigned char freeHalf)
+{
+ unsigned short int ini;
+ unsigned int auxY= vga_get_y_res();
+ Serial.printf("Free %d scanlines half:%d\r\n",auxY,freeHalf);
+
+ ini= (freeHalf==1)? (auxY>>1): 0;
+
+ if (framebuffer[0] != NULL)
+ {
+  for (unsigned int i = ini; i < auxY; i++)
+  {
+   if (framebuffer[0][i]!=NULL)
+   {
+    free(framebuffer[0][i]);    
+    //heap_caps_free(framebuffer[0][i]);
+    framebuffer[0][i]= NULL;
+    //Serial.printf("Free scanline %d\r\n",i);
+   }
+  }  
+  free(framebuffer[0]);
+  framebuffer[0]= NULL;
+ }
+ 
+ free(dma_buf_hblank_vnorm);
+ dma_buf_hblank_vnorm= NULL;
+ free(dma_buf_hblank_vsync);
+ dma_buf_hblank_vsync= NULL;
+ free(dma_buf_vblank_vnorm);
+ dma_buf_vblank_vnorm= NULL;
+ free(dma_buf_vblank_vsync);
+ dma_buf_vblank_vsync= NULL;
+
+ free(dma_buf_desc);
+ dma_buf_desc= NULL;
+
+ FreeInterrupt(); //Liberamos interrupcion
+ Serial.printf("FreeInterrupt vga6bit\r\n");
+
+ periph_module_disable(PERIPH_I2S1_MODULE); 
+ Serial.printf("Free module I2S1\r\n");
+ 
+ #ifdef use_lib_esp_arduino_compile_ver_3_3_0
+  rtc_clk_apll_enable(false);
+  rtc_clk_apll_coeff_set(0,0,0,0);
+ #else
+  //use_lib_esp_arduino_compile_ver_1_0_0
+  rtc_clk_apll_enable(false,0,0,0,0);
+ #endif 
+ Serial.printf("Disable rtc_clk_apll\r\n");
+
+ vga_freeGPIO();
+
+ back_framebuffer = active_framebuffer = 0;  
+}
+
+//**************************
+void vga_freeGPIO()
+{
+ for (unsigned char i=0;i<8;i++)
+ {
+  if (vga_pinmap[i]!=255)
+  {
+   gpio_reset_pin((gpio_num_t)vga_pinmap[i]);
+  }
+ }
+ Serial.printf("Reset gpio\r\n"); //Necesario cambiar 6pp a 3bpp correctamente
+}
+
+unsigned int vga_get_pll_cte_p0()
+{
+ return pll_cte_p0;
+}
+
+unsigned int vga_get_pll_cte_p1()
+{
+ return pll_cte_p1;
+}
+
+unsigned int vga_get_pll_cte_p2()
+{
+ return pll_cte_p2;
+}
+
+unsigned int vga_get_pll_cte_p3()
+{
+ return pll_cte_p3;
+}
+
 
 #endif
 
@@ -1086,20 +1603,3 @@ uint8_t **vga_get_framebuffer()
 }
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

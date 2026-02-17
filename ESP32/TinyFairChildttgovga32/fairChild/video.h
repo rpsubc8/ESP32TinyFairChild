@@ -32,7 +32,7 @@ void VIDEO_portReceive(int port, int val);
 void PreparaColorVGA(void);
 
 //void jj_fast_putpixel_no_clip(int x,int y,unsigned char c);
-void jj_fast_putpixel(int x,int y,unsigned char c);
+//void jj_fast_putpixel(int x,int y,unsigned char c);
 //void jj_fast_putpixel_no_clip(SDL_Surface *auxScreen, int x,int y,unsigned char c);
 //void jj_fast_putpixel(SDL_Surface *auxScreen, int x,int y,unsigned char c);
 

@@ -18,7 +18,7 @@
 #include "fairChild.h"
 
 
-static unsigned char gb_color_vga[8]=
+unsigned char gb_color_vga[8]=
 {
  0, //0x10 00010000 00 00 00
  63, //0xFD 11111101 11 11 11
@@ -95,13 +95,18 @@ unsigned char Color = 2;
 //}
 
 //void jj_fast_putpixel(SDL_Surface *auxScreen, int x,int y,unsigned char c)
-void jj_fast_putpixel(int x,int y,unsigned char c)
-{
- //if ((x<0)||(x>319)||(y<0)||(y>199))
- // return;
-// vga.dotFast(x,y,gb_color_vga[c]);
- gb_buffer_vga[y][x^2]= gb_color_vga[c];
-}
+//void jj_fast_putpixel(int x,int y,unsigned char c)
+//{
+// //if ((x<0)||(x>319)||(y<0)||(y>199))
+// // return;
+//// vga.dotFast(x,y,gb_color_vga[c]);
+// //if ((x<0)||(x>=gb_vga_ancho)||(y<0)||(y>=gb_vga_alto))
+// //{
+// // return;
+// //}
+// //if ((x<0)||(x>=gb_vga_ancho)) { Serial.printf("x:%d\r\n",x); return; }
+// gb_buffer_vga[y][x^2]= gb_color_vga[c];
+//}
 
 /*
 void VIDEO_drawFrame(void)
@@ -138,12 +143,17 @@ void VIDEO_drawFrame(void)
  unsigned int auxRow=0;
  unsigned int row;
  unsigned int col;
- unsigned int color;
- unsigned int pal;	
+ //unsigned int color;
+ unsigned int pal;
+ unsigned char destY= gb_add_offset_y;
+ unsigned short int destX;
+ unsigned short int auxOfs= (gb_add_offset_x + gb_offset_video32_x);
 
  
 	for(row=0; row<64; row++)
 	{
+     destX= auxOfs;
+
 		// The last three columns in the video buffer are special.
 		// 127 - unknown
 		// 126 - bit 1 = palette bit 1
@@ -182,13 +192,17 @@ void VIDEO_drawFrame(void)
 
     a32= (gb_color_vga[a2]) | (gb_color_vga[a3]<<8) | (gb_color_vga[a0]<<16) | (gb_color_vga[a1]<<24);
 	//ptr32[col]= a32;
-	gb_buffer_vga32[(row+gb_add_offset_y)][(col+gb_add_offset_x)]= a32;
+	//gb_buffer_vga32[(row+gb_add_offset_y)][(col+gb_add_offset_x)]= a32;
+	gb_buffer_vga32[destY][destX]= a32;
+	destX++;
 
 			//jj_fast_putpixel_no_clip(col,row,color);
 			//JJ VIDEO_Buffer_rgb[(row<<7)+col] = colors[palette[pal|color]&0x7]; //No lo necesito
 		}
 
 		auxRow+= 128;
+
+		destY++;
 	}
 
 }

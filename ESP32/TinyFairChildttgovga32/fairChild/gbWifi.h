@@ -3,7 +3,7 @@
 
  #include "gbConfig.h"
 
- #ifdef use_lib_wifi
+ #ifdef use_lib_wifi  
   #include <WiFi.h>
   #include <HTTPClient.h>
 
@@ -12,8 +12,7 @@
   void Asignar_URL_stream_WIFI(char const * URL);
   bool Leer_url_stream_WIFI(int * returnC);
   void PreparaURL(char *destURL,char *pathType,char *nameType, char *cadFile, char * fileExt);
-  void FlushStreamWIFI(void);
-
+  void FlushStreamWIFI(void);  
  #endif 
 
 #endif
