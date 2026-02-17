@@ -9,24 +9,28 @@ He realizado varias modificaciones:
  <li>No se usa PSRAM, funcionando en ESP32 de 520 KB de RAM (TTGO VGA32 v1.x)</li> 
  <li>Uso de un sólo core</li>
  <li>OSD de bajos recursos</li>
+ <li>Proyecto compatible con ESP32 versión 1.1.0, 2.0.0 y 3.3.0 (framework IDF versión 5.5)</li>
  <li>Creado proyecto compatible con Arduino IDE y Platform IO</li>
- <li>Proyecto compatible con Web Editor y ArduinoDroid (6.3.1) con tool makeandroid.bat</li>
- <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en hardware.h)</li>
- <li>Se puede usar cualquier pin digital para el video (hardware.h)</li>
+ <li>Proyecto compatible con Web Editor y ArduinoDroid (6.3.1) con tool makeandroid.bat y makearduinodroidlinux.sh</li>
+ <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en gbConfig.h)</li>
+ <li>Se puede usar cualquier pin digital para el video (gbConfig.h)</li>
+ <li>Se puede usar cualquier pin digital para el teclado CLK(KEYBOARD_CLK) y Data(KEYBOARD_DATA) (gbConfig.h)</li>
  <li>Ajuste de pantalla X e Y</li>
  <li>Menú de velocidad de video de emulación, teclado</li>
- <li>Soporte para modo 64 colores y 8 colores.</li>   
+ <li>Soporte para modo 64 colores y 8 colores.</li>
+ <li>Cambio de modos de video en caliente y en el arranque</li>
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
+ <li>VGA 360x200</li>li> 
  <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
  <li>Soporte para leer cartuchos via WIFI</li>
- <li>Versión precompilada (flash download 3.9.2) 200x150</li>
+ <li>Versión precompilada (flash download 3.9.2) 360x200</li>
 </ul> 
 
 
 <br><br>
 <h1>Versión precompilada</h1>
-En la carpeta precompile se encuentra una versión ya compilada para poder ser grabada con el flash download tool 3.9.2. Se trata de una versión con resolución 200x150 con los juegos de demostración en FLASH.<br><br>
+En la carpeta precompile se encuentra una versión ya compilada para poder ser grabada con el flash download tool 3.9.2. Se trata de una versión con resolución 360x200 con los juegos de demostración en FLASH.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile'>https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/ESP32/precompile</a>
 <br><br>
 Debemos de elegir el tipo ESP32:
