@@ -36,7 +36,19 @@ Existen 7 posibles modos de video, que en realidad se dividen en 3 básicos, de 
  <li>320x200</li>
  <li>200x150</li>
 </ul>
-Por defecto se arranca en 360x200.<br>
+Por defecto se arranca en 360x200.<br><br>
+
+| Tecla | Resolucion                       |
+| ----- | ---------------------------------|
+|   0   | 360x200x70Hz bitluni             |
+|   1   | 360x200x70Hz bitluni forzar APLL |
+|   2   | 320x200x70Hz bitluni             |
+|   3   | 320x200x70Hz fabgl               |
+|   4   | 320x200x70Hz bitluni forzar APLL |
+|   5   | 200x150x56Hz bitluni             |
+|   6   | 200x150x56Hz bitluni forzar APLL |
+
+<br>
 Los modos de video se pueden seleccionar durante el arranque (500 ms) o reinicio, pudiendo especificar otro tiempo en el <b>gbConfig.h</b> en la sección <b>use_lib_boot_time_select_vga</b>, con sólo pulsar la tecla del mismo, desde el '0' al '6'.<br>
 El modo de video de inicio también se puede fijar en la compilación, pero lo más cómodo es cambiarlo en caliente desde el OSD en cualquier instante.<br>
 Así mismo, existen para cada modo de video, la posibilidad de poder usar la función del ajuste del pll de Espressif, o bien una custom, que evita que se quede colgado el ESP32. Dicho modo especial de video tiene el añadido del <b>apll</b>.<br>
