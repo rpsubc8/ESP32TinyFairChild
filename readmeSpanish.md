@@ -21,7 +21,7 @@ He realizado varias modificaciones:
  <li>Cambio de modos de video en caliente y en el arranque</li>
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
- <li>VGA 360x200</li>li> 
+ <li>VGA 360x200</li>
  <li>No se requiere la libreria de bitluni completa. He reducido a lo mínimo, ahorrando RAM y FLASH, basado en la librería de Ricardo Massaro</li>
  <li>Soporte para leer cartuchos via WIFI</li>
  <li>Versión precompilada (flash download 3.9.2) 360x200</li>
