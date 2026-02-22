@@ -9,19 +9,49 @@ I have made several modifications:
  <li>No PSRAM used, running on ESP32 520 KB RAM (TTGO VGA32 v1.x)</li> 
  <li>Use of a single core</li>
  <li>Low resource OSD</li>
+ <li>Project compatible with ESP32 versions 1.0.0, 2.0.0, and 3.3.0 (IDF framework version 5.5). I recommend 2.0.0.</li>
  <li>Created project compatible with Arduino IDE and Platform IO</li>
- <li>Web Editor and ArduinoDroid (6.3.1) compatible project with tool makeandroid.bat</li>
- <li>Any digital pin can be used for audio (SPEAKER_PIN in hardware.h).</li>
- <li>Any digital pin can be used for video (hardware.h).</li>
+ <li>Web Editor and ArduinoDroid (6.3.1) compatible project with tool makeandroid.bat and makearduinodroidlinux.sh</li>
+ <li>Any digital pin can be used for audio (SPEAKER_PIN in gbConfig.h).</li> 
+ <li>Any digital pin can be used for video (gbConfig.h).</li>
+ <li>Any digital pin can be used for the CLK (KEYBOARD_CLK) and Data (KEYBOARD_DATA) keyboard (gbConfig.h).</li>
  <li>X and Y screen adjustment</li>
  <li>Emulation video speed menu, keyboard</li>
  <li>Support for 64-color mode and 8-color mode.</li>   
  <li>VGA 200x150</li>
  <li>VGA 320x200</li>
+ <li>VGA 360x200</li>
  <li>The complete bitluni library is not required. I have reduced to the minimum, saving RAM and FLASH, based on Ricardo Massaro's library.</li>
  <li>Support for reading cartridges via WIFI</li>
- <li>Precompiled version (flash download 3.9.2) 200x150</li>
+ <li>Precompiled version (flash download 3.9.2) 360x200</li>
 </ul> 
+
+
+<br><br>
+<h1>Video modes</h1>
+There are seven possible video modes, which are actually divided into three basic modes, with 6 bpp (64 colours):
+<ul>
+ <li>360x200</li>
+ <li>320x200</li>
+ <li>200x150</li>
+</ul>
+By default, it starts at 360x200.<br><br>
+
+|  Key  | Resolution                       |
+| ----- | ---------------------------------|
+|   0   | 360x200x70Hz bitluni             |
+|   1   | 360x200x70Hz bitluni force APLL  |
+|   2   | 320x200x70Hz bitluni             |
+|   3   | 320x200x70Hz fabgl               |
+|   4   | 320x200x70Hz bitluni force APLL  |
+|   5   | 200x150x56Hz bitluni             |
+|   6   | 200x150x56Hz bitluni force  APLL |
+
+<br>
+Video modes can be selected during start-up (500 ms) or restart, with the option to specify another time in the <b>gbConfig.h</b> in section <b>use_lib_boot_time_select_vga</b>, by simply pressing the corresponding key, from '0'to '6'.<br>
+The start-up video mode can also be set during compilation, but it is more convenient to change it on the fly from the OSD at any time.<br>
+Likewise, for each video mode, there is the option of using Espressif's PLL adjustment function or a custom function, which prevents the ESP32 from freezing. This special video mode has the addition of <b>apll</b>.<br>
+Different video settings are also permitted, with fabgl or bitluni modes.
 
 
 <br><br>
@@ -41,25 +71,12 @@ Required:
  <ul>
   <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
-  <li>Arduino IDE 1.8.11</li>
+  <li>Arduino IDE 1.8.11 ESP32 versions 1.0.0, 2.0.0, and 3.3.0 with IDF version 5.5. I recommend 2.0.</li>
   <li>ArduinoDroid (6.3.1)</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
 The attached image is of my TTGO VGA32 v1.2 board without psram or SD module.
 <br>
-
-
-<br><br>
-<h1>ArduinoDroid</h1>
-You must run, just once, the script makeandroid.bat, which leaves the entire data structure of the dataFlash directory in the root directory, as well as replacing the main files with .h calls without using the dataFlash data directory.<br>
-At the end, the script itself ends up deleting the dataFlash directory.<br>
-The script uses fart.exe (find and replace text).<br>
-Once, it has been successfully executed, it can be used with the ArduinoDroid.
-
-
-<br><br>
-<h1>Arduino Web Editor</h1>
-The makeandroid.bat script must be run once only. Once finished, it is uploaded to the cloud as any other project, either compressed in zip or by files.
 
 
 <br><br>
@@ -73,13 +90,54 @@ Then we will proceed to compile and upload to the board. No partitions are used,
 It's all set up so we don't have to install any libraries.
 
 
+
+<br><br>
+<h1>ArduinoDroid</h1>
+ArduinoDroid will allow us to compile and upload the <b>fairChild</b> project to the ESP32 from a 64-bit Android device, i.e. a mobile phone, tablet or Android box, provided that our device is supported.<br>
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewWin.gif'></center>
+If you are using Windows, you must run the script <b>makearduinodroidwin.bat</b> just once, which will leave the entire data structure of the dataFlash directory, as well as the rest of the files, in the directory from which the script is launched.<br>
+If we are on an Android device with <b>termux</b> or on Linux, we must run <b>makearduinodroidlinux.sh</b>.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewTermux.gif'></center>
+Essentially, we are left with all the files on a single level, with no subdirectories possible.<br>
+The 'notdelete' directory is internal to the script and is used to copy the <b>gbCompileOpt.h</b>.<br>
+When finished, we can open the <b>fairChild.ino</b> script itself and recompile it from ArdunoDroid, without anything special. The script has a pause at the beginning, in case we want to stop the script from outside, as well as a stop at the end, to see the results of the process.<br>
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoDroid.gif'></center>
+If we think about it, everything revolves around the <b>gb_use_lib_compile_arduinodroid</b> pragma in the <b>gbCompileOpt.h</b> header, which in normal mode is used with multi-level paths and in ArduinoDroid with the script, in a single level.<br>
+This script searches for files by going up levels until it reaches <b>ESP32TinyFairChild/fairChild</b>, so you need to download the entire project with the whole structure:
+<pre>
+ TinyFairChildttgovga32
+  fairChild
+   dataFlash
+  include
+  lib
+  test
+ tools
+  arduinodroid
+   fairChild
+  cart2h
+</pre>
+ArduinoDroid (6.3.1) with ESP32 support only works with 64-bit processors.
+
+<br><br>
+<h1>Arduino Web Editor</h1>
+The makearduinodroidwin.bat script must be run only once. Once completed, it is uploaded to the cloud as any other project, either compressed in a zip file or as individual files.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoWebEditor.gif'></center>
+It is essentially the same, as the aim is to keep everything on a single directory level. We recommend importing the project compressed in a zip file with normal compression, not maximum, as some cloud web editors do not support zip files 100%.<br>
+If all files are uploaded in a zip file, it must not contain any directories, so the <b>notdelete</b> directory should not be included.
+
+
+
 <br><br>
 <h1>Arduino IDE</h1>
 The whole project is compatible with the Arduino 1.8.11 framework.
 We just need to open the <b>fairChild.ino</b> in the <b>fairChild</b> directory.
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoIDEpreferences.gif'></center>
-For normal mode, the project is already prepared, so no library is needed. 
-We must disable the PSRAM option, and in case of exceeding 1 MB of binary, select 4 MB partition at upload time. Although the code does not use PSRAM, if the option is active and our ESP32 does not have it, an exception will be generated and it will restart in loop mode.
+For normal mode, the project is already prepared, so no library is required.<br>
+We must select the appropriate framework, allowing from version 1.0.0 onwards:
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/esp32ver110.gif'></center>
+However, version 3.3.0 is also permitted with auto-detection or forced detection:
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/esp32ver330.gif'></center>
+We must disable the PSRAM option, and if the binary exceeds 1 MB, select a 4 MB partition when uploading. Even if the code does not use PSRAM, if the option is enabled and our ESP32 does not have it, an exception will be generated and it will restart in loop mode.
 
 
 <br><br>
@@ -96,20 +154,34 @@ The keyboard is divided into 3 parts
 <h1>Options</h1>
 The <b>gbConfig.h</b> file options are selected:
 <ul>
- <li><b>use_lib_200x150:</b> Video mode 200x150 is used. You have to choose only one video mode, either 200x150 or 320x200.</li>
- <li><b>use_lib_320x200:</b> 320x200 video mode is used.</li>
- <li><b>use_lib_vga8colors:</b> Forces to use RGB 8-color mode (3 pins). Outputs 8 colors, as opposed to 64 in normal mode (6 pins RRGGBB)</li>
- <li><b>FIX_PERIBOARD_NOT_INITING:</b> In those keyboards that need ECO to initialize. Solution by David Crespo Tascón.</li>
+ <li><b>use_lib_boot_vga_360x200x70hz_bitluni_6bpp:</b> 360x200 70 Hz video mode is used.</li>
+ <li><b>use_lib_boot_vga_360x200x70hz_bitluni_apll_6bpp:</b> The 360x200 70 Hz video mode is used, which solves the problem of ESP32 crashing.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_bitluni_6bpp:</b> 320x200 70 Hz video mode is used.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_fabgl_6bpp:</b> 320x200 70 Hz video mode with fabgl settings is used.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_bitluni_apll_6bpp:</b> The 320x200 70 Hz video mode is used, which solves the problem of ESP32 crashing.</li>
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_6bpp:</b> 200x150 50 Hz video mode is used.</li>
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_apll_6bpp:</b> The 200x150 50 Hz video mode is used, which solves the problem of ESP32 crashing.</li> 
+ <li><b>use_lib_vga8colors:</b> Forces to use RGB 8-color mode (3 pins). Outputs 8 colors, as opposed to 64 in normal mode (6 pins RRGGBB). Best not to use, it is for testing purposes, it is adapted for 6bpp mode.</li>
+ <li><b>use_lib_boot_time_select_vga:</b> Milliseconds to read the key that will activate video mode at start-up (0 to 6).</li>
  <li><b>use_lib_log_serial:</b> It allows to leave traces through the usb serial port. If enabled, it consumes a little more RAM, CPU and FLASH..</li>
  <li><b>gb_ms_keyboard:</b> The number of polling milliseconds for the keyboard must be specified.</li>
- <li><b>gb_ms_vga:</b> The number of polling milliseconds for the VGA frame must be specified.</li>
- <li><b>gb_add_offset_x:</b> Shift to the right of the frame in multiples of 4 pixels.</li>
- <li><b>gb_add_offset_y:</b> Downward displacement of the frame in pixels.</li>
+ <li><b>gb_ms_vga:</b> The number of polling milliseconds for the VGA frame must be specified.</li> 
  <li><b>use_lib_delay_tick_cpu_auto:</b> If 1, the emulation speed is auto-set to 14914 ticks of 20 millis. If 0, it waits for the millis specified in use_lib_delay_tick_cpu_micros.</li>
  <li><b>use_lib_delay_tick_cpu_micros:</b> The number of milliseconds to wait for the CPU while use_lib_delay_tick_cpu_auto is 0 must be specified.</li>
- <li><b>use_lib_wifi:</b> Enable WIFI to be able to load cartridges from a web server. As it requires a lot of RAM, it is advisable to use an http server, instead of https. The network name and password must be entered in the gbWifiConfig.h file.</li>
-</ul> 
-</ul>  
+ <li><b>use_lib_wifi:</b> Enable WIFI to be able to load cartridges from a web server. As it requires a lot of RAM, it is advisable to use an http server, instead of https. The network name and password must be entered in the gbWifiConfig.h file. Selecting this option forces the use of 200x150 video mode to save RAM.</li>
+ <li><b>use_lib_audio_ticker:</b> Para usar sonido, por defecto el GPIO 25.</li>
+ <li><b>use_lib_esp_arduino_ver_3_3_0_auto:</b> Para detectar si tenemos ARDUINO 3.3.0 y Espressif IDF5 5.5,para compilar con dicha versión. Sino usará todo el código de versiones inferiores, como 1.0 o 2.0. </li>
+ <li><b>use_lib_esp_arduino_ver_3_3_0_force:</b> Force compilation with ARDUINO 3.3.0 and Espressif IDF5 5.5.</li>
+ <li><b>SPEAKER_PIN:</b> GPIO audio.</li>
+ <li><b>KEYBOARD_DATA:</b> GPIO data PS/2</li>
+ <li><b>KEYBOARD_CLK:</b> GPIO clock PS/2.</li> 
+ <li><b>PIN_RED_LOW, PIN_RED_HIGH:</b> GPIO red vga.</li>
+ <li><b>PIN_GREEN_LOW, PIN_GREEN_HIGH:</b> GPIO green vga.</li>
+ <li><b>PIN_BLUE_LOW, PIN_BLUE_HIGH:</b> GPIO blue vga.</li>
+ <li><b>PIN_HSYNC:</b> GPIO horizontal synchronism.</li>
+ <li><b>PIN_VSYNC:</b> GPIO vertical synchronism.</li> 
+</ul>
+
 
 <br><br>
 <h1>Tool chf2h</h1>
