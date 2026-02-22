@@ -9,7 +9,7 @@ He realizado varias modificaciones:
  <li>No se usa PSRAM, funcionando en ESP32 de 520 KB de RAM (TTGO VGA32 v1.x)</li> 
  <li>Uso de un sólo core</li>
  <li>OSD de bajos recursos</li>
- <li>Proyecto compatible con ESP32 versión 1.0.0, 2.0.0 y 3.3.0 (framework IDF versión 5.5)</li>
+ <li>Proyecto compatible con ESP32 versión 1.0.0, 2.0.0 y 3.3.0 (framework IDF versión 5.5). Recomiendo la 2.0.0.</li>
  <li>Creado proyecto compatible con Arduino IDE y Platform IO</li>
  <li>Proyecto compatible con Web Editor y ArduinoDroid (6.3.1) con tool makeandroid.bat y makearduinodroidlinux.sh</li>
  <li>Se puede usar cualquier pin digital para el audio (SPEAKER_PIN en gbConfig.h)</li>
@@ -151,10 +151,15 @@ El teclado está dividido en 3 partes
 <h1>Opciones</h1>
 El archivo <b>gbConfig.h</b> se seleccionan las opciones:
 <ul>
- <li><b>use_lib_200x150:</b> Se usa modo de vídeo 200x150. Se tiene que elegir sólo un modo de video, o bien 200x150 o 320x200</li>
- <li><b>use_lib_320x200:</b> Se usa modo de vídeo 320x200.</li>
- <li><b>use_lib_vga8colors:</b> Obliga a usar RGB modo de 8 colores (3 pines). Saca 8 colores, frente a los 64 del modo normal (6 pines RRGGBB).</li>
- <li><b>FIX_PERIBOARD_NOT_INITING:</b> En aquellos teclados que necesitan ECO para inicializarse. Sólución de David Crespo Tascón.</li>
+ <li><b>use_lib_boot_vga_360x200x70hz_bitluni_6bpp:</b> Se usa modo de video 360x200 70 Hz.</li>
+ <li><b>use_lib_boot_vga_360x200x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 360x200 70 Hz que soluciona el problema de ESP32 que se bloquean.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_bitluni_6bpp:</b> Se usa modo de video 320x200 70 Hz.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_fabgl_6bpp:</b> Se usa modo de video 320x200 70 Hz con ajustes de fabgl.</li>
+ <li><b>use_lib_boot_vga_320x200x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 320x200 70 Hz que soluciona el problema de ESP32 que se bloquean. </li>
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_6bpp:</b> Se usa modo de video 360x200 50 Hz.</li>
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 360x200 50 Hz que soluciona el problema de ESP32 que se bloquean.</li> 
+ <li><b>use_lib_vga8colors:</b> Obliga a usar RGB modo de 8 colores (3 pines). Saca 8 colores, frente a los 64 del modo normal (6 pines RRGGBB). Mejor no usar, es para pruebas, está adaptado para el modo 6bpp.</li> 
+ <li><b>use_lib_boot_time_select_vga:</b> Milisegundos para leer la tecla que activará el modo de video en el arranque (0 a 6).</li>
  <li><b>use_lib_log_serial:</b> Permite dejar trazas por el puerto serie usb. Si se activa, consume un poco más de RAM, CPU y FLASH.</li>
  <li><b>gb_ms_keyboard:</b> Se debe especificar el número de milisegundos de polling para el teclado.</li>
  <li><b>gb_ms_vga:</b> Se debe especificar el número de milisegundos de polling para el frame VGA.</li>
@@ -162,8 +167,11 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
  <li><b>gb_add_offset_y:</b> Desplazamiento hacia abajo del frame en pixels.</li>
  <li><b>use_lib_delay_tick_cpu_auto:</b> Si es 1, se autoajusta la velocidad de emulación a 14914 ticks de 20 milis. Si es 0, se espera los milis especificados en use_lib_delay_tick_cpu_micros </li>
  <li><b>use_lib_delay_tick_cpu_micros:</b> Se debe especificar el número de milisegundos a esperar la CPU, mientras que use_lib_delay_tick_cpu_auto sea 0.</li>
- <li><b>use_lib_wifi:</b>Activa la WIFI para poder cargar cartuchos desde un servidor web. Al requerir mucha RAM, se aconseja usar un servidor http, en lugar de https. Se debe introducir el nombre de red y clave en el fichero gbWifiConfig.h</li>
-</ul>  
+ <li><b>use_lib_wifi:</b>Activa la WIFI para poder cargar cartuchos desde un servidor web. Al requerir mucha RAM, se aconseja usar un servidor http, en lugar de https. Se debe introducir el nombre de red y clave en el fichero gbWifiConfig.h. Al seleccionar esta opción se fuerza el uso de modo de video 200x150 para ahorra RAM.</li>
+ <li><b>use_lib_audio_ticker:</b> Para usar sonido, por defecto el GPIO 25.</li>
+ <li><b>use_lib_esp_arduino_ver_3_3_0_auto:</b> Para detectar si tenemos ARDUINO 3.3.0 y Espressif IDF5 5.5,para compilar con dicha versión. Sino usará todo el código de versiones inferiores, como 1.0 o 2.0. </li>
+ <li><b>use_lib_esp_arduino_ver_3_3_0_force:</b> Fuerza a compilar con ARDUINO 3.3.0 y Espressif IDF5 5.5.</li>
+</ul>
 
 
 <br><br>
@@ -181,6 +189,12 @@ He creado una herramienta muy básica, para convertir los archivos .chf en .h en
 </pre>
 Posteriormente debemos copiar el directorio <b>dataFlash</b> en el proyecto <b>TinyFairChildttgovga32\fairChild</b> sobreescribiendo la carpeta dataFlash previa. Se recomienda limpiar el proyecto y volver a compilar.<br>
 Esta herramienta es muy simple, y no controla los errores, por lo que se recomienda dejarle los archivos con nombres muy simples y lo más sencillo posible.<br>
+Dado que está disponible el código fuente, se puede compilar para Linux o para Android bajo Termux. En Termux tenemos que instalar el paquete <b>gcc</b> o el <b>clang</b> y compilar:<br>
+<pre>
+ gcc -s cart2h.cpp -ocart2h.a
+</pre>
+Debe hacerse desde el directorio home de datos del dispositivo Android, de manera que si lo hacemos en cualquier otro directorio, nunca se podra ejecutar el <b>cart2h.a</b> creado, salvo que el dispositivo este rooteado.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewTermuxData2h.gif'></center>
 El proyecto en PLATFORM.IO está preparado para 1 MB de Flash. Si necesitamos los 4MB de flash, tendremos que modificar la entrada del archivo <b>platformio.ini</b>
 <pre>board_build.partitions = huge_app.csv</pre>
 En el Arduino IDE, debemos elegir la opción <b>Partition Scheme (Huge APP)</b>.
