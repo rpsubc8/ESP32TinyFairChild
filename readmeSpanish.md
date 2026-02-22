@@ -73,7 +73,7 @@ Se requiere:
  <ul>
   <li>TTGO VGA32 v1.x (1.0, 1.1, 1.2, 1.4) o Single core ESP32</li>
   <li>Visual Studio 1.48.1 PLATFORMIO 2.2.0</li>
-  <li>Arduino IDE 1.8.11 ESP32 versión 1.0.0, 2.0.0 y 3.3.0 con IDF versión 5.5</li>
+  <li>Arduino IDE 1.8.11 ESP32 versión 1.0.0, 2.0.0 y 3.3.0 con IDF versión 5.5. Recomiendo la 2.0.</li>
   <li>ArduinoDroid (6.3.1)</li>
  </ul>
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/ttgovga32v12.jpg'></center>
@@ -134,7 +134,11 @@ Si se suben todos los archivos en un zip, no debe contener ningún directorio, p
 Todo el proyecto es compatible con la estructura de Arduino 1.8.11.
 Tan sólo tenemos que abrir el <b>fairChild.ino</b> del directorio <b>fairChild</b>.
 <center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewArduinoIDEpreferences.gif'></center>
-Para el modo normal, ya está preparado el proyecto, de forma que no se necesita ninguna librería. 
+Para el modo normal, ya está preparado el proyecto, de forma que no se necesita ninguna librería.<br>
+Debemos seleccionar el framework adecuado, permitiendo desde la versión 1.0:
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/esp32ver110.gif'></center>
+Pero, así mismo, también se permite la versión 3.3.0 con autodetección o con forzado:
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/esp32ver330.gif'></center>
 Debemos desactivar la opción de PSRAM, y en caso de superar 1 MB de binario, seleccionar 4 MB de partición a la hora de subir. Aunque el código no use PSRAM, si la opción está activa y nuestro ESP32 no dispone de ella, se generará una excepción y reinicio del mismo en modo bucle.
 
 
@@ -162,15 +166,22 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
  <li><b>use_lib_boot_time_select_vga:</b> Milisegundos para leer la tecla que activará el modo de video en el arranque (0 a 6).</li>
  <li><b>use_lib_log_serial:</b> Permite dejar trazas por el puerto serie usb. Si se activa, consume un poco más de RAM, CPU y FLASH.</li>
  <li><b>gb_ms_keyboard:</b> Se debe especificar el número de milisegundos de polling para el teclado.</li>
- <li><b>gb_ms_vga:</b> Se debe especificar el número de milisegundos de polling para el frame VGA.</li>
- <li><b>gb_add_offset_x:</b> Desplazamiento a la derecha del frame en múltiplos de 4 pixels.</li>
- <li><b>gb_add_offset_y:</b> Desplazamiento hacia abajo del frame en pixels.</li>
+ <li><b>gb_ms_vga:</b> Se debe especificar el número de milisegundos de polling para el frame VGA.</li> 
  <li><b>use_lib_delay_tick_cpu_auto:</b> Si es 1, se autoajusta la velocidad de emulación a 14914 ticks de 20 milis. Si es 0, se espera los milis especificados en use_lib_delay_tick_cpu_micros </li>
  <li><b>use_lib_delay_tick_cpu_micros:</b> Se debe especificar el número de milisegundos a esperar la CPU, mientras que use_lib_delay_tick_cpu_auto sea 0.</li>
  <li><b>use_lib_wifi:</b>Activa la WIFI para poder cargar cartuchos desde un servidor web. Al requerir mucha RAM, se aconseja usar un servidor http, en lugar de https. Se debe introducir el nombre de red y clave en el fichero gbWifiConfig.h. Al seleccionar esta opción se fuerza el uso de modo de video 200x150 para ahorra RAM.</li>
  <li><b>use_lib_audio_ticker:</b> Para usar sonido, por defecto el GPIO 25.</li>
  <li><b>use_lib_esp_arduino_ver_3_3_0_auto:</b> Para detectar si tenemos ARDUINO 3.3.0 y Espressif IDF5 5.5,para compilar con dicha versión. Sino usará todo el código de versiones inferiores, como 1.0 o 2.0. </li>
  <li><b>use_lib_esp_arduino_ver_3_3_0_force:</b> Fuerza a compilar con ARDUINO 3.3.0 y Espressif IDF5 5.5.</li>
+ <li><b>SPEAKER_PIN:</b> GPIO audio.</li>
+ <li><b>KEYBOARD_DATA:</b> GPIO data PS/2</li>
+ <li><b>KEYBOARD_CLK:</b> GPIO clock PS/2.</li>
+ <li><b>KEYBOARD_DATA:</b> GPIO audio.</li>
+ <li><b>PIN_RED_LOW, PIN_RED_HIGH:</b> GPIO vga rojo.</li>
+ <li><b>PIN_GREEN_LOW, PIN_GREEN_HIGH:</b> GPIO vga verde.</li>
+ <li><b>PIN_BLUE_LOW, PIN_BLUE_HIGH:</b> GPIO vga azul.</li>
+ <li><b>PIN_HSYNC:</b> GPIO sincronismo horizontal.</li>
+ <li><b>PIN_VSYNC:</b> GPIO sincronismo vertical</li>
 </ul>
 
 
