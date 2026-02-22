@@ -184,8 +184,10 @@ The <b>gbConfig.h</b> file options are selected:
 
 
 <br><br>
-<h1>Tool chf2h</h1>
-I have created a very basic tool, to convert .chf files to .h in ready mode to be processed by the emulator. We just have to leave the .chf files in the <b>input/cart</b> folder and run the <b>chf2h.exe</b> file, so that an output will be generated in the <b>output/dataFlash</b> directory. For testing purposes, a file has been left in the <b>input/cart</b> directory, which it is recommended to delete in case of making a new custom list. It is also recommended to delete the files in the <b>fairChild/dataFlash/gbcart.h</b> and <b>fairChild/dataFlash/cart</b> directory to have a clean project.<br><br><br>
+<h1>Tool cart2h</h1>
+I have created a very basic tool to convert .chf files to .h files in list mode so they can be processed by the emulator. All we have to do is leave the .chf files in the folder. <b>input/cart</b> and run the file <b>cart2h.exe</b>, so that an output will be generated in the directory <b>output/dataFlash</b>. For testing purposes, a file has been left in the <b>input/cart</b> directory. It is recommended that you delete this file if you create a new custom list.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewWinData2h.gif'></center>
+It is also recommended to delete the files from the directory. <b>fairChild/dataFlash/gbcart.h</b> and <b>fairChild/dataFlash/cart</b> to have a clean project.<br><br>
 <a href='https://github.com/rpsubc8/ESP32TinyFairChild/tree/main/tools'>Tool chf2h</a>
 <br><br>
 <pre>
@@ -196,11 +198,17 @@ I have created a very basic tool, to convert .chf files to .h in ready mode to b
   dataFlash/
    cart/
 </pre>
-Subsequently we must copy the <b>dataFlash</b> directory into the <b>TinyFairChildttgovga32\fairChild</b> project overwriting the previous dataFlash folder. It is recommended that you clean up the project and recompile.<br>
-This tool is very simple, and does not check for errors, so it is recommended to leave the files with very simple names and as simple as possible.
-The project in PLATFORM.IO is prepared for 1MB of Flash. If we need the 4MB of flash, we will have to modify the entry in the <b>platformio.ini</b> file.
+Next, copy the <b>dataFlash</b> directory into the <b>TinyFairChildttgovga32\fairChild</b> project, overwriting the previous dataFlash folder. It is recommended to clean the project and recompile.<br>
+This tool is very simple and does not check for errors, so it is recommended that you give your files very simple names that are as straightforward as possible.<br>
+Since the source code is available, it can be compiled for Linux or Android under Termux. In Termux, we need to install the <b>gcc</b> or <b>clang</b> package and compile:<br>
+<pre>
+ gcc -s cart2h.cpp -ocart2h.a
+</pre>
+This must be done from the home directory of the Android device, so that if we do it in any other directory, the created <b>cart2h.a</b> will never be able to run, unless the device is rooted.
+<center><img src='https://raw.githubusercontent.com/rpsubc8/ESP32TinyFairChild/main/preview/previewTermuxData2h.gif'></center>
+The project in PLATFORM.IO is set up for 1 MB of Flash. If we need 4 MB of Flash, we will have to modify the entry in the <b>platformio.ini</b> file.
 <pre>board_build.partitions = huge_app.csv</pre>
-In the Arduino IDE, we must choose the option <b>Partition Scheme (Huge APP)</b>.
+In the Arduino IDE, we must select the <b>Partition Scheme (Huge APP)</b> option.
 
 
 
@@ -213,6 +221,7 @@ https://rpsubc8.github.io/ESP32TinyFairChild/www/fairchild/output
 </pre>
 
  To activate this mode, you must uncomment the line <b>use_lib_wifi</b> in <b>gbConfig.h</b><br>
+ If compilation for WIFI is enabled, the use of 200x150 video mode will be forced due to RAM requirements in https mode. The 320x200 mode with WIFI has worked for me, but the 360x200 mode sometimes ran out of RAM in requests.
  We must configure in the file <b>gbWIFIConfig.h</b> the data:
  <pre>
   #define gb_wifi_ssd "nombreDeNuestraRedWIFIdelRooter"
