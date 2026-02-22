@@ -160,8 +160,8 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
  <li><b>use_lib_boot_vga_320x200x70hz_bitluni_6bpp:</b> Se usa modo de video 320x200 70 Hz.</li>
  <li><b>use_lib_boot_vga_320x200x70hz_fabgl_6bpp:</b> Se usa modo de video 320x200 70 Hz con ajustes de fabgl.</li>
  <li><b>use_lib_boot_vga_320x200x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 320x200 70 Hz que soluciona el problema de ESP32 que se bloquean. </li>
- <li><b>use_lib_boot_vga_200x150x70hz_bitluni_6bpp:</b> Se usa modo de video 360x200 50 Hz.</li>
- <li><b>use_lib_boot_vga_200x150x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 360x200 50 Hz que soluciona el problema de ESP32 que se bloquean.</li> 
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_6bpp:</b> Se usa modo de video 200x150 50 Hz.</li>
+ <li><b>use_lib_boot_vga_200x150x70hz_bitluni_apll_6bpp:</b> Se usa modo de video 200x150 50 Hz que soluciona el problema de ESP32 que se bloquean.</li> 
  <li><b>use_lib_vga8colors:</b> Obliga a usar RGB modo de 8 colores (3 pines). Saca 8 colores, frente a los 64 del modo normal (6 pines RRGGBB). Mejor no usar, es para pruebas, está adaptado para el modo 6bpp.</li> 
  <li><b>use_lib_boot_time_select_vga:</b> Milisegundos para leer la tecla que activará el modo de video en el arranque (0 a 6).</li>
  <li><b>use_lib_log_serial:</b> Permite dejar trazas por el puerto serie usb. Si se activa, consume un poco más de RAM, CPU y FLASH.</li>
@@ -175,8 +175,7 @@ El archivo <b>gbConfig.h</b> se seleccionan las opciones:
  <li><b>use_lib_esp_arduino_ver_3_3_0_force:</b> Fuerza a compilar con ARDUINO 3.3.0 y Espressif IDF5 5.5.</li>
  <li><b>SPEAKER_PIN:</b> GPIO audio.</li>
  <li><b>KEYBOARD_DATA:</b> GPIO data PS/2</li>
- <li><b>KEYBOARD_CLK:</b> GPIO clock PS/2.</li>
- <li><b>KEYBOARD_DATA:</b> GPIO audio.</li>
+ <li><b>KEYBOARD_CLK:</b> GPIO clock PS/2.</li> 
  <li><b>PIN_RED_LOW, PIN_RED_HIGH:</b> GPIO vga rojo.</li>
  <li><b>PIN_GREEN_LOW, PIN_GREEN_HIGH:</b> GPIO vga verde.</li>
  <li><b>PIN_BLUE_LOW, PIN_BLUE_HIGH:</b> GPIO vga azul.</li>
