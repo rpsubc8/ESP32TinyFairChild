@@ -115,7 +115,7 @@ Este script busca los archivos subiendo niveles hasta llegar al <b>ESP32TinyFair
   test
  tools
   arduinodroid
-   galaksija
+   fairChild
   cart2h
 </pre>
 El ArduinoDroid (6.3.1) con soporte para ESP32 sólo funciona con procesadores de 64 bits.
